@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="page-body">
+    <div class="container-fluid">
+        {% include "layouts/breadcrumb.html" %}
+        
+        <div class="user-profile">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card hovercard text-center overflow-hidden">
+                        <div class="cardheader">
+                            {% if user.card_header %}
+                                <img alt="Card Header" src="{{ user.card_header.url }}" class="card-header-img">
+                            {% else %}
+                                <img alt="Default Card Header" src="{% static 'assets/images/other-images/bg-profile.png' %}" class="card-header-img">
+                            {% endif %}
+                        </div>
+                        <div class="user-image">
+                            <div class="avatar">
+                                {% if user.profile_picture %}
+                                    <img alt="Profile Picture" src="{{ user.profile_picture.url }}" class="profile-pic-img">
+                                {% else %}
+                                    <img alt="Default Profile Picture" src="{% static 'assets/images/user/7.jpg' %}" class="profile-pic-img">
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'edit_profile' %}" class="icon-wrapper">
+                                <i class="icofont icofont-pencil-alt-5"></i>
+                            </a>
+                        </div>
+                        <div class="info">
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="ttl-info text-start">
+                                                <h6><i class="fa fa-envelope"></i> Email</h6>
+                                                <span>{{ user.email }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="ttl-info text-start">
+                                                <h6><i class="fa fa-calendar"></i> Username</h6>
+                                                <span>{{ user.username }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="user-designation">
+                                        <div class="title"><a href="">{{ user.get_full_name }}</a></div>
+                                        <div class="desc">{{ user.role }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="ttl-info text-start">
+                                                <h6><i class="fa fa-phone"></i> Contact Us</h6>
+                                                <span>{{ user.phone }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <!-- Add additional user info as needed -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Card Header Image Styling */
+.card-header-img {
+    width: 100%;
+    height: auto; /* Let the height adjust automatically based on the image's aspect ratio */
+    max-height: 470px; /* Set a maximum height to prevent the image from becoming too large */
+    object-fit: cover; /* Ensure the image covers the area and maintains aspect ratio */
+}
+
+/* Profile Picture Styling */
+.profile-pic-img {
+    width: 150px; /* Adjusted for smaller screens */
+    height: 150px; /* Adjusted for smaller screens */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Ensure the image covers the area and maintains aspect ratio */
+    border: 5px solid white; /* Add a white border for better visibility */
+}
+
+/* Ensure that the profile picture is centered and properly aligned */
+.user-image .avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -75px; /* Adjust for better positioning above the card */
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+    .profile-pic-img {
+        width: 200px; /* Slightly larger on medium screens */
+        height: 200px;
+    }
+}
+
+@media (min-width: 992px) {
+    .profile-pic-img {
+        width: 250px; /* Larger on large screens */
+        height: 250px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .profile-pic-img {
+        width: 300px; /* Full size on extra large screens */
+        height: 300px;
+    }
+}
+
+</style>
+
+{% endblock %}

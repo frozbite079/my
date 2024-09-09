@@ -1,0 +1,136 @@
+{% extends 'base.html' %} {% load static %} {% load sass_tags %} {% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends--> {% endblock %} {% block content %} <div class="page-body">
+   <div class="container-fluid"> {% include "layouts/breadcrumb.html" %} <div class="row">
+         <!-- FieldCapacity List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
+                  <div>
+                     <h3>FieldCapacity List</h3>
+                     <span>This table lists all registered fieldcapacitys with options to edit or delete them.</span>
+                  </div>
+                  <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addFieldCapacityModal">Add FieldCapacity</button>
+               </div>
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                           <tr>
+                              <th>ID No.</th>
+                              <th>Approx Field Capacity</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody> {% for fieldcapacity in fieldcapacitys %} <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ fieldcapacity.name }}</td>
+                              <td>
+                                 <ul class="action">
+                                    <li class="edit">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#editFieldCapacityModal" data-fieldcapacity-id="{{ fieldcapacity.id }}" data-fieldcapacity-name="{{ fieldcapacity.name }}">
+                                          <i class="icon-pencil-alt"></i>
+                                       </a>
+                                    </li>
+                                    <li class="delete">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#deleteFieldCapacityModal" data-fieldcapacity-id="{{ fieldcapacity.id }}">
+                                          <i class="icon-trash"></i>
+                                       </a>
+                                    </li>
+                                 </ul>
+                              </td>
+                           </tr> {% endfor %} </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Add FieldCapacity Modal -->
+<div class="modal fade" id="addFieldCapacityModal" tabindex="-1" aria-labelledby="addFieldCapacityModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addFieldCapacityModalLabel">Add FieldCapacity</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'fieldcapacity_create' %}"> {% csrf_token %} <div class="mb-3">
+                  <label for="name" class="form-label">Approx Field Capacity</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter approx field capacity">
+               </div>
+               <button type="submit" class="btn btn-primary">Add FieldCapacity</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Edit FieldCapacity Modal -->
+<div class="modal fade" id="editFieldCapacityModal" tabindex="-1" aria-labelledby="editFieldCapacityModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editFieldCapacityModalLabel">Edit FieldCapacity</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'fieldcapacity_update' pk=0 %}" id="editFieldCapacityForm"> {% csrf_token %} <input type="hidden" id="editFieldCapacityId" name="id">
+               <div class="mb-3">
+                  <label for="editName" class="form-label">Approx Field Capacity</label>
+                  <input type="text" class="form-control" id="editName" name="name" placeholder="Enter fieldcapacity name">
+               </div>
+               <button type="submit" class="btn btn-primary">Update FieldCapacity</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Delete FieldCapacity Modal -->
+<div class="modal fade" id="deleteFieldCapacityModal" tabindex="-1" aria-labelledby="deleteFieldCapacityModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteFieldCapacityModalLabel">Delete FieldCapacity</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'fieldcapacity_delete' pk=0 %}" id="deleteFieldCapacityForm"> {% csrf_token %} <input type="hidden" id="deleteFieldCapacityId" name="id">
+               <p>Are you sure you want to delete this fieldcapacity?</p>
+               <button type="submit" class="btn btn-danger">Delete FieldCapacity</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div> {% endblock %} {% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   // Edit FieldCapacity Modal
+   document.addEventListener('DOMContentLoaded', function() {
+      var editFieldCapacityModal = document.getElementById('editFieldCapacityModal');
+      editFieldCapacityModal.addEventListener('show.bs.modal', function(event) {
+         var button = event.relatedTarget; // Button that triggered the modal
+         var fieldcapacityId = button.getAttribute('data-fieldcapacity-id');
+         var fieldcapacityName = button.getAttribute('data-fieldcapacity-name');
+         var form = document.getElementById('editFieldCapacityForm');
+         form.action = "{% url 'fieldcapacity_update' pk='0' %}".replace('0', fieldcapacityId);
+         form.querySelector('#editFieldCapacityId').value = fieldcapacityId;
+         form.querySelector('#editName').value = fieldcapacityName;
+      });
+      // Delete FieldCapacity Modal
+      var deleteFieldCapacityModal = document.getElementById('deleteFieldCapacityModal');
+      deleteFieldCapacityModal.addEventListener('show.bs.modal', function(event) {
+         var button = event.relatedTarget; // Button that triggered the modal
+         var fieldcapacityId = button.getAttribute('data-fieldcapacity-id');
+         var form = document.getElementById('deleteFieldCapacityForm');
+         form.action = "{% url 'fieldcapacity_delete' pk='0' %}".replace('0', fieldcapacityId);
+         form.querySelector('#deleteFieldCapacityId').value = fieldcapacityId;
+      });
+   });
+</script> {% endblock %}

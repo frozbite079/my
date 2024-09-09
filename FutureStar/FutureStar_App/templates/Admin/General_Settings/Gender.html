@@ -1,0 +1,136 @@
+{% extends 'base.html' %} {% load static %} {% load sass_tags %} {% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends--> {% endblock %} {% block content %} <div class="page-body">
+   <div class="container-fluid"> {% include "layouts/breadcrumb.html" %} <div class="row">
+         <!-- Gender List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
+                  <div>
+                     <h3>Gender List</h3>
+                     <span>This table lists all registered genders with options to edit or delete them.</span>
+                  </div>
+                  <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addGenderModal">Add Gender</button>
+               </div>
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                           <tr>
+                              <th>ID No.</th>
+                              <th>Gender</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody> {% for gender in genders %} <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ gender.name }}</td>
+                              <td>
+                                 <ul class="action">
+                                    <li class="edit">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#editGenderModal" data-gender-id="{{ gender.id }}" data-gender-name="{{ gender.name }}">
+                                          <i class="icon-pencil-alt"></i>
+                                       </a>
+                                    </li>
+                                    <li class="delete">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#deleteGenderModal" data-gender-id="{{ gender.id }}">
+                                          <i class="icon-trash"></i>
+                                       </a>
+                                    </li>
+                                 </ul>
+                              </td>
+                           </tr> {% endfor %} </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Add Gender Modal -->
+<div class="modal fade" id="addGenderModal" tabindex="-1" aria-labelledby="addGenderModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addGenderModalLabel">Add Gender</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'gender_create' %}"> {% csrf_token %} <div class="mb-3">
+                  <label for="name" class="form-label">Gender</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Gender ">
+               </div>
+               <button type="submit" class="btn btn-primary">Add Gender</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Edit Gender Modal -->
+<div class="modal fade" id="editGenderModal" tabindex="-1" aria-labelledby="editGenderModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editGenderModalLabel">Edit Gender</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'gender_update' pk=0 %}" id="editGenderForm"> {% csrf_token %} <input type="hidden" id="editGenderId" name="id">
+               <div class="mb-3">
+                  <label for="editName" class="form-label">Gender</label>
+                  <input type="text" class="form-control" id="editName" name="name" placeholder="Enter Gender ">
+               </div>
+               <button type="submit" class="btn btn-primary">Update Gender</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- Delete Gender Modal -->
+<div class="modal fade" id="deleteGenderModal" tabindex="-1" aria-labelledby="deleteGenderModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteGenderModalLabel">Delete Gender</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'gender_delete' pk=0 %}" id="deleteGenderForm"> {% csrf_token %} <input type="hidden" id="deleteGenderId" name="id">
+               <p>Are you sure you want to delete this gender?</p>
+               <button type="submit" class="btn btn-danger">Delete Gender</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div> {% endblock %} {% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   // Edit Gender Modal
+   document.addEventListener('DOMContentLoaded', function() {
+      var editGenderModal = document.getElementById('editGenderModal');
+      editGenderModal.addEventListener('show.bs.modal', function(event) {
+         var button = event.relatedTarget; // Button that triggered the modal
+         var genderId = button.getAttribute('data-gender-id');
+         var genderName = button.getAttribute('data-gender-name');
+         var form = document.getElementById('editGenderForm');
+         form.action = "{% url 'gender_update' pk='0' %}".replace('0', genderId);
+         form.querySelector('#editGenderId').value = genderId;
+         form.querySelector('#editName').value = genderName;
+      });
+      // Delete Gender Modal
+      var deleteGenderModal = document.getElementById('deleteGenderModal');
+      deleteGenderModal.addEventListener('show.bs.modal', function(event) {
+         var button = event.relatedTarget; // Button that triggered the modal
+         var genderId = button.getAttribute('data-gender-id');
+         var form = document.getElementById('deleteGenderForm');
+         form.action = "{% url 'gender_delete' pk='0' %}".replace('0', genderId);
+         form.querySelector('#deleteGenderId').value = genderId;
+      });
+   });
+</script> {% endblock %}
