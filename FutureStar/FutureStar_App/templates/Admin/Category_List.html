@@ -20,10 +20,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
-                        <div>
-                            <h3>Category List</h3>
-                            <span>This table lists all registered categories with options to edit or delete them.</span>
-                        </div>
+                        <div></div>
                         <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
                     </div>
                     <div class="card-body">
@@ -72,11 +69,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'category_create' %}">
+                <form method="post" action="{% url 'category_create' %}" id="addCategoryForm">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter category name">
+                        <div id="addCategoryError" class="text-danger mt-2"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Category</button>
                 </form>
@@ -100,6 +98,7 @@
                     <div class="mb-3">
                         <label for="editName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="editName" name="name" placeholder="Enter category name">
+                        <div id="editCategoryError" class="text-danger mt-2"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Category</button>
                 </form>
@@ -107,6 +106,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Delete Category Modal -->
 <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
@@ -138,8 +138,8 @@
 <!-- Plugins JS Ends-->
 
 <script>
-    // Edit Category Modal
     document.addEventListener('DOMContentLoaded', function () {
+        // Edit Category Modal
         var editCategoryModal = document.getElementById('editCategoryModal');
         if (editCategoryModal) {
             editCategoryModal.addEventListener('show.bs.modal', function (event) {
@@ -150,6 +150,8 @@
                 form.action = "{% url 'category_update' pk='0' %}".replace('0', categoryId);
                 form.querySelector('#editCategoryId').value = categoryId;
                 form.querySelector('#editName').value = categoryName;
+                // Clear previous error message
+                document.getElementById('editCategoryError').textContent = '';
             });
         }
 
@@ -164,6 +166,49 @@
                 form.querySelector('#deleteCategoryId').value = categoryId;
             });
         }
+
+        // Add Category Form Validation
+        var addCategoryForm = document.getElementById('addCategoryForm');
+        if (addCategoryForm) {
+            addCategoryForm.addEventListener('submit', function (event) {
+                var nameInput = document.getElementById('name');
+                var errorContainer = document.getElementById('addCategoryError');
+                var nameValue = nameInput.value.trim();
+
+                // Clear previous error messages
+                errorContainer.textContent = '';
+
+                if (nameValue === '') {
+                    event.preventDefault();
+                    errorContainer.textContent = 'Category name cannot be empty.';
+                    return false;
+                }
+
+                // Additional validation for uniqueness can be handled server-side
+            });
+        }
+
+        // Edit Category Form Validation
+        var editCategoryForm = document.getElementById('editCategoryForm');
+        if (editCategoryForm) {
+            editCategoryForm.addEventListener('submit', function (event) {
+                var nameInput = document.getElementById('editName');
+                var errorContainer = document.getElementById('editCategoryError');
+                var nameValue = nameInput.value.trim();
+
+                // Clear previous error messages
+                errorContainer.textContent = '';
+
+                if (nameValue === '') {
+                    event.preventDefault();
+                    errorContainer.textContent = 'Category name cannot be empty.';
+                    return false;
+                }
+
+                // Additional validation for uniqueness can be handled server-side
+            });
+        }
     });
 </script>
+
 {% endblock %}

@@ -28,21 +28,19 @@ def LoginFormView(request):
 
     if request.method == "POST":
         if form.is_valid():
-            username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, email=email, password=password)  # Updated to use email
             if user is not None:
                 login(request, user)
                 return redirect("Dashboard")
             else:
                 # Add error message
-                messages.error(request, "Invalid username or password")
+                messages.error(request, "Invalid email or password")
         else:
-            # Optional: Add a message or debug if form validation fails
             messages.error(request, "Form validation failed")
 
     return render(request, "login.html", {"form": form})
-
 
 # Dashboard View
 class Dashboard(LoginRequiredMixin, View):
@@ -498,7 +496,7 @@ class CategoryListView(LoginRequiredMixin, View):
 
 # Role CRUD Views
 class RoleCreateView(LoginRequiredMixin, View):
-    template_name = "forms/role_form.html"
+    template_name = "Admin/User_Role.html"
 
     def get(self, request):
         form = RoleForm()
@@ -518,7 +516,7 @@ class RoleCreateView(LoginRequiredMixin, View):
 
 
 class RoleUpdateView(LoginRequiredMixin, View):
-    template_name = "forms/role_form.html"
+    template_name = "Admin/User_Role.html"  # Fixed template name
 
     def get(self, request, pk):
         role = get_object_or_404(Role, pk=pk)

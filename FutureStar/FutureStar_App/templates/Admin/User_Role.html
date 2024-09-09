@@ -19,10 +19,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
-                        <div>
-                            <h3>Role List</h3>
-                            <span>This table lists all registered roles with options to edit or delete them.</span>
-                        </div>
+                        <div></div>
                         <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addRoleModal">Add Role</button>
                     </div>
                    
@@ -72,11 +69,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'role_create' %}">
+                <form method="post" action="{% url 'role_create' %}" id="addRoleForm">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" name="name" placeholder="Enter role name">
+                        <div id="addRoleError" class="text-danger mt-2"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Role</button>
                 </form>
@@ -100,6 +98,7 @@
                     <div class="mb-3">
                         <label for="editName" class="form-label">Name</label>
                         <input type="text" class="form-control" id="editName" name="name" placeholder="Enter role name">
+                        <div id="editRoleError" class="text-danger mt-2"></div>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Role</button>
                 </form>
@@ -107,6 +106,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Delete Role Modal -->
 <div class="modal fade" id="deleteRoleModal" tabindex="-1" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
@@ -137,28 +137,67 @@
 <script src="{% static 'assets/js/tooltip-init.js'%}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Edit Role Modal
     document.addEventListener('DOMContentLoaded', function () {
-      var editRoleModal = document.getElementById('editRoleModal');
-      editRoleModal.addEventListener('show.bs.modal', function (event) {
-          var button = event.relatedTarget; // Button that triggered the modal
-          var roleId = button.getAttribute('data-role-id');
-          var roleName = button.getAttribute('data-role-name');
-          var form = document.getElementById('editRoleForm');
-          form.action = "{% url 'role_update' pk='0' %}".replace('0', roleId);
-          form.querySelector('#editRoleId').value = roleId;
-          form.querySelector('#editName').value = roleName;
-      });
+        var editRoleModal = document.getElementById('editRoleModal');
+        editRoleModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var roleId = button.getAttribute('data-role-id');
+            var roleName = button.getAttribute('data-role-name');
+            var form = document.getElementById('editRoleForm');
+            form.action = "{% url 'role_update' pk='0' %}".replace('0', roleId);
+            form.querySelector('#editRoleId').value = roleId;
+            form.querySelector('#editName').value = roleName;
+            // Clear any previous error messages
+            document.getElementById('editRoleError').textContent = '';
+        });
 
-      // Delete Role Modal
-      var deleteRoleModal = document.getElementById('deleteRoleModal');
-      deleteRoleModal.addEventListener('show.bs.modal', function (event) {
-          var button = event.relatedTarget; // Button that triggered the modal
-          var roleId = button.getAttribute('data-role-id');
-          var form = document.getElementById('deleteRoleForm');
-          form.action = "{% url 'role_delete' pk='0' %}".replace('0', roleId);
-          form.querySelector('#deleteRoleId').value = roleId;
-      });
-  });
+        var deleteRoleModal = document.getElementById('deleteRoleModal');
+        deleteRoleModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var roleId = button.getAttribute('data-role-id');
+            var form = document.getElementById('deleteRoleForm');
+            form.action = "{% url 'role_delete' pk='0' %}".replace('0', roleId);
+            form.querySelector('#deleteRoleId').value = roleId;
+        });
+
+        // Add Role Form Validation
+        var addRoleForm = document.getElementById('addRoleForm');
+        addRoleForm.addEventListener('submit', function(event) {
+            var nameInput = document.getElementById('name');
+            var errorContainer = document.getElementById('addRoleError');
+            var nameValue = nameInput.value.trim();
+
+            // Clear previous errors
+            errorContainer.textContent = '';
+
+            if (nameValue === '') {
+                event.preventDefault();
+                errorContainer.textContent = 'Role name cannot be empty.';
+                return false;
+            }
+
+            // Additional validation for uniqueness can be handled server-side
+        });
+
+        // Edit Role Form Validation
+        var editRoleForm = document.getElementById('editRoleForm');
+        editRoleForm.addEventListener('submit', function(event) {
+            var nameInput = document.getElementById('editName');
+            var errorContainer = document.getElementById('editRoleError');
+            var nameValue = nameInput.value.trim();
+
+            // Clear previous errors
+            errorContainer.textContent = '';
+
+            if (nameValue === '') {
+                event.preventDefault();
+                errorContainer.textContent = 'Role name cannot be empty.';
+                return false;
+            }
+
+            // Additional validation for uniqueness can be handled server-side
+        });
+    });
 </script>
+
 {% endblock %}
