@@ -44,7 +44,7 @@ def LoginFormView(request):
                 # Add error message for invalid credentials
                 messages.error(request, "Invalid email or password")
         else:
-            messages.error(request, "Form validation failed")
+            messages.error(request, "Invalid email or password")
 
     return render(request, "login.html", {"form": form})
 
