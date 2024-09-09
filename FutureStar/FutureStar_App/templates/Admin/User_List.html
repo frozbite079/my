@@ -247,6 +247,34 @@ document.addEventListener('DOMContentLoaded', function () {
             location.reload();  // Reload the page after deletion
         });
     });
+
+    // Toggle User Status
+    document.querySelectorAll('.toggle-status').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var userId = button.getAttribute('data-user-id');
+            var status = button.getAttribute('data-status');
+            var url = "{% url 'user_toggle_status' pk='0' %}".replace('0', userId);
+    
+            var form = document.createElement('form');
+            form.method = 'POST';
+            form.action = url;
+    
+            var csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = '{{ csrf_token }}';
+            form.appendChild(csrfToken);
+    
+            var statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'status';
+            statusInput.value = status;
+            form.appendChild(statusInput);
+    
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
 });
 </script>
 {% endblock %}

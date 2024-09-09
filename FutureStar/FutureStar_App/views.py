@@ -30,12 +30,18 @@ def LoginFormView(request):
         if form.is_valid():
             email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
-            user = authenticate(request, email=email, password=password)  # Updated to use email
+            user = authenticate(request, email=email, password=password)  # Authenticate with email
+
             if user is not None:
-                login(request, user)
-                return redirect("Dashboard")
+                if user.is_active:  # Check if the user is active
+                    login(request, user)
+                    messages.success(request, "Login Successful")
+                    return redirect("Dashboard")
+                else:
+                    # Add error message if user account is deactivated
+                    messages.error(request, "Your account is deactivated. Please contact the admin.")
             else:
-                # Add error message
+                # Add error message for invalid credentials
                 messages.error(request, "Invalid email or password")
         else:
             messages.error(request, "Form validation failed")
@@ -312,7 +318,7 @@ class ToggleUserStatusView(View):
         new_status = request.POST.get("status")
 
         # Check if the user is a superuser
-        if user.is_superuser:
+        if user.role_id == 1:
             messages.error(request, "Superuser status cannot be changed.")
             return redirect("user_list")
 
