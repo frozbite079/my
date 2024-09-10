@@ -33,6 +33,7 @@ def LoginFormView(request):
     form = LoginForm(request.POST or None)
 
     if request.method == "POST":
+        remember_me = request.POST.get('rememberMe') == 'on'
         if form.is_valid():
             email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
@@ -41,6 +42,8 @@ def LoginFormView(request):
             if user is not None:
                 if user.is_active:  # Check if the user is active
                     login(request, user)
+                    if remember_me:
+                        request.session.set_expiry(1209600)
                     messages.success(request, "Login Successful")
                     return redirect("Dashboard")
                 else:

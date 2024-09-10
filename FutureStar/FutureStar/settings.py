@@ -159,3 +159,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sohamghayal02@gmail.com'
 EMAIL_HOST_PASSWORD = 'vhzttjhigjttsufv'
 DEFAULT_FROM_EMAIL = 'sohamghayal02@gmail.com'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 60
