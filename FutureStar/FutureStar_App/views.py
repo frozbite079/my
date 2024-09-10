@@ -498,19 +498,27 @@ class UserEditView(LoginRequiredMixin, View):
 class UserDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
+
+        # Check if the user to be deleted is a superuser
+        if user.role_id == 1:  # Assuming role_id 1 corresponds to superuser
+            messages.error(request, "Superusers cannot be deleted.")
+            return redirect("user_list")  # Redirect to the user list if superuser is attempted to delete
+
         user.delete()
         messages.success(request, f"User {user.username} was successfully deleted.")
-        return redirect(
-            "user_list"
-        )  # Redirect to the user list after successful deletion
+        return redirect("user_list")  # Redirect to the user list after successful deletion
 
     def post(self, request, pk):
         user = get_object_or_404(User, pk=pk)
+
+        # Check if the user to be deleted is a superuser
+        if user.role_id == 1:  # Assuming role_id 1 corresponds to superuser
+            messages.error(request, "Superusers cannot be deleted.")
+            return redirect("user_list")  # Redirect to the user list if superuser is attempted to delete
+
         user.delete()
         messages.success(request, f"User {user.username} was successfully deleted.")
-        return redirect(
-            "user_list"
-        )  # Redirect to the user list after successful deletion
+        return redirect("user_list")  # Redirect to the user list after successful deletion
 
 
 # Category CRUD Views

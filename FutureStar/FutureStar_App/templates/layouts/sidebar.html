@@ -6,8 +6,8 @@
    <div>
       <div class="logo-wrapper">
          <a href="{% url 'Dashboard' %}">
-            <img class="img-fluid for-light" src="{{ header_logo }}" alt="">
-            <img class="img-fluid for-dark" src="{{  header_logo  }}" alt="">
+            <img style="width: 120px; height: 35px;" class="img-fluid for-light" src="{{ header_logo }}" alt="">
+            <img style="width: 120px; height: 35px;" class="img-fluid for-dark" src="{{  header_logo  }}" alt="">
          </a>
          <div class="back-btn">
             <i class="fa fa-angle-left"></i>
@@ -17,7 +17,7 @@
          </div>
       </div>
       <div class="logo-icon-wrapper">
-         <a href="#">
+         <a href="{% url 'Dashboard' %}">
             <img class="img-fluid" src="{{ fav_icon }}" style="width: 35px; height: 35px;" alt="">
          </a>
       </div>
