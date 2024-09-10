@@ -450,7 +450,7 @@ class UserListView(LoginRequiredMixin, View):
             {
                 "users": users,
                 "roles": roles,
-                "breadcrumb": {"parent": "Admin", "child": "User List"},
+                "breadcrumb": {"parent": "User", "child": "User List"},
             },
         )
 
@@ -587,7 +587,7 @@ class CategoryListView(LoginRequiredMixin, View):
             self.template_name,
             {
                 "categories": categories,
-                "breadcrumb": {"parent": "Admin", "child": "Category"},
+                "breadcrumb": {"parent": "User", "child": "Category"},
             },
         )
 
@@ -657,7 +657,7 @@ class RoleListView(LoginRequiredMixin, View):
         return render(
             request,
             self.template_name,
-            {"roles": roles, "breadcrumb": {"parent": "Admin", "child": "Role"}},
+            {"roles": roles, "breadcrumb": {"parent": "User", "child": "Role"}},
         )
 
 
