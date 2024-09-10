@@ -43,7 +43,7 @@
     <div class="col-12 p-0">    
       <div class="login-card">
         <div>
-          <div><a class="logo" href="#"><img class="img-fluid for-light" src="{% static 'assets/images/logo/logo.png'%}" alt="loginpage"><img class="img-fluid for-dark" src="{% static 'assets/images/logo/logo_dark.png'%}" alt="loginpage"></a></div>
+          <div><a class="logo" href="#"><img class="img-fluid for-light" src="{{ header_logo }}" alt="loginpage"><img class="img-fluid for-dark" src="{{ header_logo }}" alt="loginpage"></a></div>
           <div class="login-main"> 
             <form class="theme-form" method='post' novalidate>
                 {% csrf_token %}
@@ -64,7 +64,7 @@
                 <div class="checkbox p-0">
                   <input id="rememberMe" type="checkbox" name="rememberMe">
                   <label class="text-muted" for="rememberMe">Remember password</label>
-                </div><a class="link" href="{% url 'password_reset_request' %}">Forgot password?</a>
+                </div><a class="link" href="{% url 'forgot_password' %}">Forgot password?</a>
                 <div class="text-end mt-3">
                   <button class="btn btn-primary btn-block w-100" type="submit">Sign in</button>
                 </div>
@@ -78,13 +78,4 @@
     </div>
   </div>
 
-{% endblock %}
-
-
-
-
-
-{% block scriptscontent %}
-    {% include 'layouts/messages.html' %}
-   
 {% endblock %}

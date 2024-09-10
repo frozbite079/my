@@ -17,6 +17,12 @@ from .models import *
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.utils.crypto import get_random_string
+from django.utils import timezone
+from django.core.mail import send_mail
+from datetime import timedelta
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 
 def LoginFormView(request):
@@ -47,6 +53,89 @@ def LoginFormView(request):
             messages.error(request, "Invalid email or password")
 
     return render(request, "login.html", {"form": form})
+
+class ForgotPasswordView(View):
+    template_name = 'Admin/Auth/forgot_password.html'
+    User = get_user_model()
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        email = request.POST.get('email')
+        user = self.User.objects.filter(email=email).first()
+
+        if user:
+            user.remember_token = get_random_string(40)
+            user.token_created_at = timezone.now()
+            user.save()
+            reset_url = request.build_absolute_uri(reverse('reset_password', args=[user.remember_token]))
+
+            context = {
+                'user': user,
+                'reset_url': reset_url
+            }
+
+            subject = 'Reset Your Password'
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email = [user.email]
+            html_content = render_to_string('Admin/Email/reset_password.html', context)
+
+            msg = EmailMultiAlternatives(subject, '', from_email, to_email)
+            msg.attach_alternative(html_content, "text/html")
+
+            try:
+                msg.send()
+                messages.success(request, 'Please check your email for the reset link.')
+            except Exception as e:
+                messages.error(request, 'There was an error sending the email. Please try again later.')
+
+            return redirect("login")
+        else:
+            messages.error(request, 'Email not found.')
+
+        return redirect('forgot_password')
+
+class ResetPasswordView(View):
+    template_name = 'Admin/Auth/reset_password.html'
+    User = get_user_model()
+
+    def get(self, request, token):
+        user = get_object_or_404(User, remember_token=token)
+
+        # Check if the token has expired (1 hour expiration)
+        expiration_time = timezone.now() - timedelta(hours=1)
+        if user.token_created_at and user.token_created_at < expiration_time:
+            messages.error(request, 'This reset link has expired.')
+            return redirect('forgot_password')
+
+        return render(request, self.template_name, {'token': token})
+
+    def post(self, request, token):
+        user = get_object_or_404(User, remember_token=token)
+
+        # Check if the token has expired (1 hour expiration)
+        expiration_time = timezone.now() - timedelta(hours=1)
+        if user.token_created_at and user.token_created_at < expiration_time:
+            messages.error(request, 'This reset link has expired.')
+            return redirect('forgot_password')
+
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password == confirm_password:
+            user.set_password(password)
+            if not user.email_verified_at:
+                user.email_verified_at = timezone.now()
+            user.remember_token = get_random_string(40)  # Invalidate the token
+            user.token_created_at = None  # Clear the token creation time
+            user.save()
+            messages.success(request, 'Your password has been reset. You can now log in.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Passwords do not match.')
+
+        return render(request, self.template_name, {'token': token})
 
 # Dashboard View
 class Dashboard(LoginRequiredMixin, View):

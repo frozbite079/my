@@ -55,9 +55,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=20)
     password = models.CharField(max_length=255)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
+    remember_token = models.CharField(max_length=255,null=True, blank=True)
+    token_created_at = models.DateTimeField(null=True, blank=True)  # Add this field
+    email_verified_at = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-
     objects = UserManager()
 
     USERNAME_FIELD = "username"
