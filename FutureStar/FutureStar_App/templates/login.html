@@ -3,12 +3,47 @@
 {% load sass_tags %}
 {% load widget_tweaks %}
 {% block content %}
+<script>
+  function saveDetails() {
+    var email = document.getElementById('email').value;
+    var saveDetailsCheckbox = document.getElementById('rememberMe');
+
+    if (saveDetailsCheckbox.checked) {
+        // Save email to localStorage
+        localStorage.setItem('savedEmail', email);
+        // Do not save password for security reasons
+        localStorage.setItem('saveDetailsChecked', 'true'); // Store checkbox state
+    } else {
+        // Clear saved details if checkbox is not checked
+        localStorage.removeItem('savedEmail');
+        localStorage.removeItem('saveDetailsChecked'); // Remove checkbox state
+    }
+  }
+
+  function loadSavedDetails() {
+    var savedEmail = localStorage.getItem('savedEmail');
+    var saveDetailsChecked = localStorage.getItem('saveDetailsChecked');
+    
+    if (savedEmail) {
+        document.getElementById('email').value = savedEmail;
+    }
+    if (saveDetailsChecked === 'true') {
+        document.getElementById('rememberMe').checked = true;
+    }
+  }
+
+  window.onload = function() {
+    loadSavedDetails();
+    document.getElementById('rememberMe').addEventListener('change', saveDetails);
+  };
+</script>
+
 
 <div class="row m-0">
     <div class="col-12 p-0">    
       <div class="login-card">
         <div>
-          <div><a class="logo" href="#"><img class="img-fluid for-light" src="{{  header_logo  }}" alt="loginpage"><img class="img-fluid for-dark" src="{% static 'assets/images/logo/logo_dark.png'%}" alt="loginpage"></a></div>
+          <div><a class="logo" href="#"><img class="img-fluid for-light" src="{% static 'assets/images/logo/logo.png'%}" alt="loginpage"><img class="img-fluid for-dark" src="{% static 'assets/images/logo/logo_dark.png'%}" alt="loginpage"></a></div>
           <div class="login-main"> 
             <form class="theme-form" method='post' novalidate>
                 {% csrf_token %}
@@ -27,9 +62,9 @@
               </div>
               <div class="form-group mb-0">
                 <div class="checkbox p-0">
-                  <input id="checkbox1" type="checkbox">
-                  <label class="text-muted" for="checkbox1">Remember password</label>
-                </div><a class="link" href="forget-password.html">Forgot password?</a>
+                  <input id="rememberMe" type="checkbox" name="rememberMe">
+                  <label class="text-muted" for="rememberMe">Remember password</label>
+                </div><a class="link" href="{% url 'password_reset_request' %}">Forgot password?</a>
                 <div class="text-end mt-3">
                   <button class="btn btn-primary btn-block w-100" type="submit">Sign in</button>
                 </div>
@@ -43,4 +78,13 @@
     </div>
   </div>
 
+{% endblock %}
+
+
+
+
+
+{% block scriptscontent %}
+    {% include 'layouts/messages.html' %}
+   
 {% endblock %}
