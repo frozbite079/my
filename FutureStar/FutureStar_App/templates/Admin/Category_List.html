@@ -15,15 +15,22 @@
 
 <div class="page-body">
     <div class="container-fluid">
-        {% include "layouts/breadcrumb.html" %}        
-        <div class="row">
+        <div class="page-title">
+            <div class="row">
+              <div class="col-6">
+                <h3>{{breadcrumb.child}}</h3>
+              </div>
+              <div class="col-6">
+                <ol class="breadcrumb">
+                    <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category Type</button>
+                </ol>
+              </div>
+            </div>
+          </div>        
+          <div class="row">
             <!-- Category List -->
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
-                        <div></div>
-                        <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
-                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="display" id="basic-1">
@@ -66,18 +73,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                <h5 class="modal-title" id="addCategoryModalLabel">Add Category Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form method="post" action="{% url 'category_create' %}" id="addCategoryForm">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter category name">
+                        <label for="name" class="form-label">Category Type</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Category Type">
                         <div id="addCategoryError" class="text-danger mt-2"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Add Category</button>
+                    <button type="submit" class="btn btn-primary">Category Type</button>
                 </form>
             </div>
         </div>
@@ -89,7 +96,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -97,11 +104,11 @@
                     {% csrf_token %}
                     <input type="hidden" id="editCategoryId" name="id">
                     <div class="mb-3">
-                        <label for="editName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="editName" name="name" placeholder="Enter category name">
+                        <label for="editName" class="form-label">Category Type</label>
+                        <input type="text" class="form-control" id="editName" name="name" placeholder="Enter Category Type">
                         <div id="editCategoryError" class="text-danger mt-2"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update Category</button>
+                    <button type="submit" class="btn btn-primary">Update Category Type</button>
                 </form>
             </div>
         </div>
@@ -114,7 +121,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteCategoryModalLabel">Delete Category</h5>
+                <h5 class="modal-title" id="deleteCategoryModalLabel">Delete Category Type</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

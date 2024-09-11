@@ -442,8 +442,9 @@ class UserListView(LoginRequiredMixin, View):
 
     def get(self, request):
         User = get_user_model()  # Get the custom user model
-        users = User.objects.all()
-        roles = Role.objects.all()
+        users = User.objects.exclude(role_id__isnull=True).exclude(role_id=1)
+        # Filter roles where id is not equal to 1
+        roles = Role.objects.exclude(id=1)
         return render(
             request,
             self.template_name,
@@ -590,7 +591,7 @@ class CategoryListView(LoginRequiredMixin, View):
             self.template_name,
             {
                 "categories": categories,
-                "breadcrumb": {"parent": "User", "child": "Category"},
+                "breadcrumb": {"parent": "User", "child": "Category Type"},
             },
         )
 

@@ -12,15 +12,25 @@
 {% block content %} 
 <div class="page-body">
    <div class="container-fluid"> 
-      {% include "layouts/breadcrumb.html" %} 
-      <div class="row">
+      <div class="page-title">
+         <div class="row">
+           <div class="col-6">
+             <h3>{{breadcrumb.child}}</h3>
+           </div>
+           <div class="col-6">
+             <ol class="breadcrumb">
+               <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addEventTypeModal">Add Event Type</button>
+             </ol>
+           </div>
+         </div>
+       </div>      <div class="row">
          <!-- EventType List -->
          <div class="col-sm-12">
             <div class="card">
-               <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
+               <!-- <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
                   <div></div>
                   <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addEventTypeModal">Add Event Type</button>
-               </div>
+               </div> -->
                <div class="card-body">
                   <div class="table-responsive">
                      <table class="display" id="basic-1">
