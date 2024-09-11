@@ -160,13 +160,7 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
-
-class Table(LoginRequiredMixin, views.View):
-    def get(self, request, *args, **kwargs):
-        return render(request, "table/datatable-basic-init.html")
-
-
-# User Profile View
+##################################################### User Profile View ###############################################################
 class UserProfileView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
@@ -262,7 +256,7 @@ class UserUpdateProfileView(View):
                 )
 
 
-# SytemSettings view
+################################## SytemSettings view #######################################################
 class System_Settings(LoginRequiredMixin, View):
     login_url = "/"
     redirect_field_name = "redirect_to"
@@ -375,7 +369,7 @@ class System_Settings(LoginRequiredMixin, View):
             else:
                 system_settings.save()
                 success = True
-                messages.success(request, "System settings were successfully updated.")
+                messages.success(request, "System settings Updated Successfully.")
         
         except Exception as e:
             messages.error(request, f"An error occurred: {e}")
@@ -483,7 +477,7 @@ class UserEditView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
             # Use Django messages to pass success message
-            messages.success(request, f"User {user.username} was successfully updated.")
+            messages.success(request, f"User {user.username} Updated Successfully.")
             return JsonResponse({"success": True})
         else:
             # Return form errors if the form is invalid
@@ -493,7 +487,7 @@ class UserDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         user.delete()
-        messages.success(request, f"User {user.username} was successfully deleted.")
+        messages.success(request, f"User {user.username} Deleted Successfully.")
         return redirect("user_list")  # Redirect to the user list after successful deletion
 
     def post(self, request, pk):
@@ -506,7 +500,7 @@ class UserDeleteView(LoginRequiredMixin, View):
             return redirect("user_list")
         else:
             user.delete()
-            messages.success(request, f"User {user.username} was successfully deleted.")
+            messages.success(request, f"User {user.username} Deleted Successfully.")
             return redirect("user_list")  # Redirect to the user list after successful deletion
 
 
@@ -522,12 +516,12 @@ class CategoryCreateView(LoginRequiredMixin, View):
             # Check for existing category with the same name
             name = form.cleaned_data.get("name")
             if Category.objects.filter(name=name).exists():
-                messages.error(request, "A category with this name already exists.")
+                messages.error(request, "Category Type with this name already exists.")
                 return redirect(
                     "category_list"
                 )  # Redirect back to category_list with an error message
             form.save()
-            messages.success(request, "Category was successfully created.")
+            messages.success(request, "Category Type Create Successfully.")
             return redirect("category_list")
         else:
             messages.error(
@@ -550,7 +544,7 @@ class CategoryUpdateView(LoginRequiredMixin, View):
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
-            messages.success(request, "Category was successfully updated.")
+            messages.success(request, "Category Type Updated Successfully.")
             return redirect("category_list")
         else:
             messages.error(
@@ -564,13 +558,13 @@ class CategoryDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
         category.delete()
-        messages.success(request, "Category was successfully deleted.")
+        messages.success(request, "Category Type Deleted Successfully.")
         return redirect("category_list")
 
     def post(self, request, pk):
         category = get_object_or_404(Category, pk=pk)
         category.delete()
-        messages.success(request, "Category was successfully deleted.")
+        messages.success(request, "Category Type Deleted Successfully.")
         return redirect("category_list")
 
 
@@ -601,7 +595,7 @@ class RoleCreateView(LoginRequiredMixin, View):
         form = RoleForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Role created successfully.")
+            messages.success(request, "Role Created successfully.")
             return redirect("role_list")
         messages.error(
             request,
@@ -623,7 +617,7 @@ class RoleUpdateView(LoginRequiredMixin, View):
         form = RoleForm(request.POST, instance=role)
         if form.is_valid():
             form.save()
-            messages.success(request, "Role was successfully updated.")
+            messages.success(request, "Role Updated Successfully.")
             return redirect("role_list")
         messages.error(
             request,
@@ -636,13 +630,13 @@ class RoleDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         role = get_object_or_404(Role, pk=pk)
         role.delete()
-        messages.success(request, "Role was successfully deleted.")
+        messages.success(request, "Role Deleted Successfully.")
         return redirect("role_list")
 
     def post(self, request, pk):
         role = get_object_or_404(Role, pk=pk)
         role.delete()
-        messages.success(request, "Role was successfully deleted.")
+        messages.success(request, "Role Deleted Successfully.")
         return redirect("role_list")
 
 
@@ -741,7 +735,7 @@ class FieldCapacityCreateView(LoginRequiredMixin, View):
         form = FieldCapacityForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity created successfully.")
+            messages.success(request, "Field Capacity Created successfully.")
             return redirect("fieldcapacity_list")
         messages.error(
             request,
@@ -763,7 +757,7 @@ class FieldCapacityUpdateView(LoginRequiredMixin, View):
         form = FieldCapacityForm(request.POST, instance=fieldcapacity)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity updated successfully.")
+            messages.success(request, "Field Capacity Updated Successfully.")
             return redirect("fieldcapacity_list")
         messages.error(
             request,
@@ -776,13 +770,13 @@ class FieldCapacityDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         fieldcapacity = get_object_or_404(FieldCapacity, pk=pk)
         fieldcapacity.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Field Capacity Successfully Deleted.")
         return redirect("fieldcapacity_list")
 
     def post(self, request, pk):
         fieldcapacity = get_object_or_404(FieldCapacity, pk=pk)
         fieldcapacity.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Field Capacity Successfully Deleted.")
         return redirect("fieldcapacity_list")
 
 
@@ -801,7 +795,7 @@ class FieldCapacityListView(LoginRequiredMixin, View):
         )
 
 
-# GroundMaterials CRUD Views
+# Groun dMaterials CRUD Views
 class GroundMaterialCreateView(LoginRequiredMixin, View):
     template_name = "forms/groundmaterial_form.html"
 
@@ -813,11 +807,11 @@ class GroundMaterialCreateView(LoginRequiredMixin, View):
         form = GroundMaterialForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity created successfully.")
+            messages.success(request, "Ground Material Created Successfully.")
             return redirect("groundmaterial_list")
         messages.error(
             request,
-            "There was an error creating the Field Capacity. Please ensure all fields are filled out correctly.",
+            "There was an error creating the Ground Material. Please ensure all fields are filled out correctly.",
         )
         return render(request, self.template_name, {"form": form})
 
@@ -835,11 +829,11 @@ class GroundMaterialUpdateView(LoginRequiredMixin, View):
         form = GroundMaterialForm(request.POST, instance=groundmaterial)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity updated successfully.")
+            messages.success(request, "Ground Material Updated Successfully.")
             return redirect("groundmaterial_list")
         messages.error(
             request,
-            "There was an error updating the game type. Please ensure all fields are filled out correctly.",
+            "There was an error updating the Ground Material. Please ensure all fields are filled out correctly.",
         )
         return render(request, self.template_name, {"form": form})
 
@@ -848,13 +842,13 @@ class GroundMaterialDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         groundmaterial = get_object_or_404(GroundMaterial, pk=pk)
         groundmaterial.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Ground Material Successfully Deleted.")
         return redirect("groundmaterial_list")
 
     def post(self, request, pk):
         groundmaterial = get_object_or_404(GroundMaterial, pk=pk)
         groundmaterial.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Ground Material successfully deleted.")
         return redirect("groundmaterial_list")
 
 
@@ -888,11 +882,11 @@ class TournamentStyleCreateView(LoginRequiredMixin, View):
         form = TournamentStyleForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity created successfully.")
+            messages.success(request, "Tournament Style created successfully.")
             return redirect("tournamentstyle_list")
         messages.error(
             request,
-            "There was an error creating the Field Capacity. Please ensure all fields are filled out correctly.",
+            "There was an error creating the Tournament Style. Please ensure all fields are filled out correctly.",
         )
         return render(request, self.template_name, {"form": form})
 
@@ -910,11 +904,11 @@ class TournamentStyleUpdateView(LoginRequiredMixin, View):
         form = TournamentStyleForm(request.POST, instance=tournamentstyle)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity updated successfully.")
+            messages.success(request, "Tournament Style updated successfully.")
             return redirect("tournamentstyle_list")
         messages.error(
             request,
-            "There was an error updating the game type. Please ensure all fields are filled out correctly.",
+            "There was an error updating the Tournament Style. Please ensure all fields are filled out correctly.",
         )
         return render(request, self.template_name, {"form": form})
 
@@ -923,13 +917,13 @@ class TournamentStyleDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         tournamentstyle = get_object_or_404(TournamentStyle, pk=pk)
         tournamentstyle.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Tournament Style successfully deleted.")
         return redirect("tournamentstyle_list")
 
     def post(self, request, pk):
         tournamentstyle = get_object_or_404(TournamentStyle, pk=pk)
         tournamentstyle.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Tournament Style successfully deleted.")
         return redirect("tournamentstyle_list")
 
 
@@ -960,11 +954,11 @@ class EventTypeCreateView(LoginRequiredMixin, View):
         form = EventTypeForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity created successfully.")
+            messages.success(request, "Event Type created successfully.")
             return redirect("eventtype_list")
         messages.error(
             request,
-            "There was an error creating the Field Capacity. Please ensure all fields are filled out correctly.",
+            "There was an error creating the Event Type. Please ensure all fields are filled out correctly.",
         )
         return render(request, self.template_name, {"form": form})
 
@@ -982,11 +976,11 @@ class EventTypeUpdateView(LoginRequiredMixin, View):
         form = EventTypeForm(request.POST, instance=eventtype)
         if form.is_valid():
             form.save()
-            messages.success(request, "Field Capacity updated successfully.")
+            messages.success(request, "Event Type Capacity updated successfully.")
             return redirect("eventtype_list")
         messages.error(
             request,
-            "There was an error updating the game type. Please ensure all fields are filled out correctly.",
+            "There was an error updating the Event type. Please ensure all fields are filled out correctly.",
         )
         return render(request, self.template_name, {"form": form})
 
@@ -995,13 +989,13 @@ class EventTypeDeleteView(LoginRequiredMixin, View):
     def get(self, request, pk):
         eventtype = get_object_or_404(EventType, pk=pk)
         eventtype.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Event Type successfully deleted.")
         return redirect("eventtype_list")
 
     def post(self, request, pk):
         eventtype = get_object_or_404(EventType, pk=pk)
         eventtype.delete()
-        messages.success(request, "Field Capacity successfully deleted.")
+        messages.success(request, "Event Type successfully deleted.")
         return redirect("eventtype_list")
 
 
