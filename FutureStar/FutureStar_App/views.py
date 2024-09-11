@@ -664,76 +664,76 @@ class RoleListView(LoginRequiredMixin, View):
         )
 
 
-# Gender CRUD Views
-class GenderCreateView(LoginRequiredMixin, View):
-    template_name = "forms/gender_form.html"
+# # Gender CRUD Views
+# class GenderCreateView(LoginRequiredMixin, View):
+#     template_name = "forms/gender_form.html"
 
-    def get(self, request):
-        form = GenderForm()
-        return render(request, self.template_name, {"form": form})
+#     def get(self, request):
+#         form = GenderForm()
+#         return render(request, self.template_name, {"form": form})
 
-    def post(self, request):
-        form = GenderForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Gender created successfully.")
-            return redirect("gender_list")
-        messages.error(
-            request,
-            "There was an error creating the gender. Please ensure all fields are filled out correctly.",
-        )
-        return render(request, self.template_name, {"form": form})
-
-
-class GenderUpdateView(LoginRequiredMixin, View):
-    template_name = "forms/gender_form.html"
-
-    def get(self, request, pk):
-        gender = get_object_or_404(UserGender, pk=pk)
-        form = GenderForm(instance=gender)
-        return render(request, self.template_name, {"form": form})
-
-    def post(self, request, pk):
-        gender = get_object_or_404(UserGender, pk=pk)
-        form = GenderForm(request.POST, instance=gender)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Gender was successfully updated.")
-            return redirect("gender_list")
-        messages.error(
-            request,
-            "There was an error updating the gender. Please ensure all fields are filled out correctly.",
-        )
-        return render(request, self.template_name, {"form": form})
+#     def post(self, request):
+#         form = GenderForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Gender created successfully.")
+#             return redirect("gender_list")
+#         messages.error(
+#             request,
+#             "There was an error creating the gender. Please ensure all fields are filled out correctly.",
+#         )
+#         return render(request, self.template_name, {"form": form})
 
 
-class GenderDeleteView(LoginRequiredMixin, View):
-    def get(self, request, pk):
-        gender = get_object_or_404(UserGender, pk=pk)
-        gender.delete()
-        messages.success(request, "Gender was successfully deleted.")
-        return redirect("gender_list")
+# class GenderUpdateView(LoginRequiredMixin, View):
+#     template_name = "forms/gender_form.html"
 
-    def post(self, request, pk):
-        gender = get_object_or_404(UserGender, pk=pk)
-        gender.delete()
-        messages.success(request, "Gender was successfully deleted.")
-        return redirect("gender_list")
+#     def get(self, request, pk):
+#         gender = get_object_or_404(UserGender, pk=pk)
+#         form = GenderForm(instance=gender)
+#         return render(request, self.template_name, {"form": form})
+
+#     def post(self, request, pk):
+#         gender = get_object_or_404(UserGender, pk=pk)
+#         form = GenderForm(request.POST, instance=gender)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Gender was successfully updated.")
+#             return redirect("gender_list")
+#         messages.error(
+#             request,
+#             "There was an error updating the gender. Please ensure all fields are filled out correctly.",
+#         )
+#         return render(request, self.template_name, {"form": form})
 
 
-class GenderListView(LoginRequiredMixin, View):
-    template_name = "Admin/General_Settings/Gender.html"
+# class GenderDeleteView(LoginRequiredMixin, View):
+#     def get(self, request, pk):
+#         gender = get_object_or_404(UserGender, pk=pk)
+#         gender.delete()
+#         messages.success(request, "Gender was successfully deleted.")
+#         return redirect("gender_list")
 
-    def get(self, request):
-        genders = UserGender.objects.all()
-        return render(
-            request,
-            self.template_name,
-            {
-                "genders": genders,
-                "breadcrumb": {"parent": "General Settings", "child": "Gender"},
-            },
-        )
+#     def post(self, request, pk):
+#         gender = get_object_or_404(UserGender, pk=pk)
+#         gender.delete()
+#         messages.success(request, "Gender was successfully deleted.")
+#         return redirect("gender_list")
+
+
+# class GenderListView(LoginRequiredMixin, View):
+#     template_name = "Admin/General_Settings/Gender.html"
+
+#     def get(self, request):
+#         genders = UserGender.objects.all()
+#         return render(
+#             request,
+#             self.template_name,
+#             {
+#                 "genders": genders,
+#                 "breadcrumb": {"parent": "General Settings", "child": "Gender"},
+#             },
+#         )
 
 # fieldcapacity CRUD Views
 class FieldCapacityCreateView(LoginRequiredMixin, View):

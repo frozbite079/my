@@ -61,11 +61,11 @@ urlpatterns = [
     path('categories/delete/<int:pk>/', CategoryDeleteView.as_view(), name='category_delete'),
 
 
-    #Gender Role URL
-    path('gender/', GenderListView.as_view(), name='gender_list'),
-    path('gender/create/', GenderCreateView.as_view(), name='gender_create'),
-    path('gender/update/<int:pk>/', GenderUpdateView.as_view(), name='gender_update'),
-    path('gender/delete/<int:pk>/', GenderDeleteView.as_view(), name='gender_delete'),
+    # #Gender Role URL
+    # path('gender/', GenderListView.as_view(), name='gender_list'),
+    # path('gender/create/', GenderCreateView.as_view(), name='gender_create'),
+    # path('gender/update/<int:pk>/', GenderUpdateView.as_view(), name='gender_update'),
+    # path('gender/delete/<int:pk>/', GenderDeleteView.as_view(), name='gender_delete'),
 
     # FieldCapacity URL
     path('fieldcapacity/', FieldCapacityListView.as_view(), name='fieldcapacity_list'),
