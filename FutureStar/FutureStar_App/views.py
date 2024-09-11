@@ -201,26 +201,19 @@ class UserUpdateProfileView(View):
     def post(self, request, *args, **kwargs):
         if "change_password" in request.POST:
             # Handle password change
-            password_change_form = CustomPasswordChangeForm(
-                user=request.user, data=request.POST
-            )
+            password_change_form = CustomPasswordChangeForm(user=request.user, data=request.POST)
             if password_change_form.is_valid():
                 user = password_change_form.save()
                 logout(request)  # Log out the user after password change
-                messages.success(
-                    request,
-                    "Your password has been changed successfully. Please log in again.",
-                )
+                messages.success(request, "Your password has been changed successfully. Please log in again.")
                 return redirect("login")
             else:
-                for field in password_change_form:
-                    for error in field.errors:
-                        messages.error(request, error)
                 form = UserUpdateProfileForm(instance=request.user)
+                # Render the same template with the form errors
                 return render(
                     request,
-                    "Admin/User/edit_profile.html",
-                    {"form": form, "password_change_form": password_change_form},
+                    "Admin/Dashboard.html",
+                    {"form": form, "password_change_form": password_change_form, "show_change_password_modal": True},
                 )
         else:
             # Handle profile update

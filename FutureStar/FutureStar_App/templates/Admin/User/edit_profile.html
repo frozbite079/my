@@ -89,42 +89,6 @@
     </div>
 </div>
 
-<!-- Change Password Modal -->
-<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Password Change Form -->
-                <form method="post" action="{% url 'edit_profile' %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="{{ password_change_form.old_password.id_for_label }}" class="form-label">Old Password</label>
-                        {{ password_change_form.old_password }}
-                       
-                    </div>
-                    <div class="mb-3">
-                        <label for="{{ password_change_form.new_password1.id_for_label }}" class="form-label">New Password</label>
-                        {{ password_change_form.new_password1 }}
-                      
-                    </div>
-                    <div class="mb-3">
-                        <label for="{{ password_change_form.new_password2.id_for_label }}" class="form-label">Confirm New Password</label>
-                        {{ password_change_form.new_password2 }}
-                       
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="change_password">Change Password</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 
 {% block scriptcontent %}
