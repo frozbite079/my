@@ -1,0 +1,135 @@
+{% load static %} {% load sass_tags %}
+<!-- Font Awesome-->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+<!-- Page Sidebar Start-->
+<div class="sidebar-wrapper" sidebar-layout="stroke-svg">
+   <div>
+      <div class="logo-wrapper">
+         <a href="{% url 'Dashboard' %}">
+            <img style="width: 120px; height: 35px;" class="img-fluid for-light" src="{{ header_logo }}" alt="">
+            <img style="width: 120px; height: 35px;" class="img-fluid for-dark" src="{{  header_logo  }}" alt="">
+         </a>
+         <div class="back-btn">
+            <i class="fa fa-angle-left"></i>
+         </div>
+         <div class="toggle-sidebar">
+            <i class="status_toggle middle sidebar-toggle" data-feather="grid"></i>
+         </div>
+      </div>
+      <div class="logo-icon-wrapper">
+         <a href="{% url 'Dashboard' %}">
+            <img class="img-fluid" src="{{ fav_icon }}" style="width: 35px; height: 35px;" alt="">
+         </a>
+      </div>
+      <nav class="sidebar-main">
+         <div class="left-arrow" id="left-arrow">
+            <i data-feather="arrow-left"></i>
+         </div>
+         <div id="sidebar-menu">
+            <ul class="sidebar-links" id="simple-bar">
+               <li class="back-btn">
+                  <a href="#">
+                     <img class="img-fluid" src="{{fav_icon }}" style="width: 35px; height: 35px;" alt="">
+                  </a>
+                  <div class="mobile-back text-end">
+                     <span>Back</span>
+                     <i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
+                  </div>
+               </li>
+               <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'Dashboard' %}">
+                     <svg class="stroke-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-home"></use>
+                     </svg>
+                     <span class="lan">Dashboard</span>
+                  </a>
+               </li>
+
+               <!-- User Menu -->
+               <li class="sidebar-list">
+                  <a class="sidebar-link sidebar-title" href="#">
+                     <svg class="stroke-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-user"></use>
+                     </svg>
+                     <svg class="fill-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#fill-user"></use>
+                     </svg>
+                     <span class="lan">User</span>
+                  </a>
+                  <ul class="sidebar-submenu">
+                     <li>
+                        <a href="{% url 'user_list' %}">User List</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'role_list' %}">User Roles</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'category_list' %}">User Category</a>
+                     </li>
+                  </ul>
+               </li>
+               
+               <!-- 
+               <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'user_list' %}">
+                     <svg class="stroke-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-user"></use>
+                     </svg>
+                     <span class="lan">User's</span>
+                  </a>
+               </li>
+               <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'role_list' %}">
+                     <i class="fa fa-user-lock"></i>&nbsp;&nbsp;&nbsp; <span class="lan">User Role</span>
+                  </a>
+               </li>
+               <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'category_list' %}">
+                     <i class="fa fa-layer-group"></i>&nbsp;&nbsp;&nbsp; <span class="lan">Category</span>
+                  </a>
+                  </a>
+               </li> -->
+               <li class="sidebar-list">
+                  <a class="sidebar-link sidebar-title" href="#">
+                     <svg class="stroke-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-widget"></use>
+                     </svg>
+                     <svg class="fill-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#fill-widget"></use>
+                     </svg>
+                     <span class="lan">General Settings</span>
+                  </a>
+                  <ul class="sidebar-submenu">
+                     <li>
+                        <a href="{% url 'fieldcapacity_list' %}">Field Capacity</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'groundmaterial_list' %}">Ground Material</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'tournamentstyle_list' %}">Tournament Style</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'eventtype_list' %}">Event Type</a>
+                     </li>
+                  </ul>
+               </li>
+               <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'System_Settings' %}">
+                     <i class="icon-settings"> </i> &nbsp;&nbsp;&nbsp; <span class="lan">System Settings</span>
+                  </a>
+               </li>
+               <!-- <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'System_Settings' %}">
+                     <i class="icon-settings"></i>&nbsp;&nbsp;&nbsp; <span class="lan">System Settings</span>
+                  </a>
+               </li> -->
+            </ul>
+         </div>
+         <div class="right-arrow" id="right-arrow">
+            <i data-feather="arrow-right"></i>
+         </div>
+      </nav>
+   </div>
+</div>
+<!-- Page Sidebar Ends-->

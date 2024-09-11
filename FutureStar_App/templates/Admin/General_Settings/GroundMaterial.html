@@ -1,0 +1,212 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% load sass_tags %} 
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends--> 
+{% endblock %} 
+{% block title %}Ground Material{% endblock %}
+
+{% block content %} 
+<div class="page-body">
+   <div class="container-fluid"> 
+      {% include "layouts/breadcrumb.html" %} 
+      <div class="row">
+         <!-- GroundMaterial List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-header pb-0 card-no-border d-flex justify-content-between align-items-center">
+                  <div></div>
+                  <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addGroundMaterialModal">Add Ground Material</button>
+               </div>
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                           <tr>
+                              <th>ID No.</th>
+                              <th>Ground Material</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody> 
+                           {% for groundmaterial in groundmaterials %} 
+                           <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ groundmaterial.name }}</td>
+                              <td>
+                                 <ul class="action">
+                                    <li class="edit">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#editGroundMaterialModal" data-groundmaterial-id="{{ groundmaterial.id }}" data-groundmaterial-name="{{ groundmaterial.name }}">
+                                          <i class="icon-pencil-alt"></i>
+                                       </a>
+                                    </li>
+                                    <li class="delete">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#deleteGroundMaterialModal" data-groundmaterial-id="{{ groundmaterial.id }}">
+                                          <i class="icon-trash"></i>
+                                       </a>
+                                    </li>
+                                 </ul>
+                              </td>
+                           </tr> 
+                           {% endfor %} 
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Add GroundMaterial Modal -->
+<div class="modal fade" id="addGroundMaterialModal" tabindex="-1" aria-labelledby="addGroundMaterialModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addGroundMaterialModalLabel">Add Ground Material</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'groundmaterial_create' %}" id="addGroundMaterialForm"> 
+               {% csrf_token %} 
+               <div class="mb-3">
+                  <label for="name" class="form-label">Ground Material</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Ground Material">
+                  <div id="addGroundMaterialError" class="text-danger mt-2"></div>
+               </div>
+               <button type="submit" class="btn btn-primary">Add Ground Material</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Edit GroundMaterial Modal -->
+<div class="modal fade" id="editGroundMaterialModal" tabindex="-1" aria-labelledby="editGroundMaterialModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editGroundMaterialModalLabel">Edit Ground Material</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'groundmaterial_update' pk=0 %}" id="editGroundMaterialForm"> 
+               {% csrf_token %} 
+               <input type="hidden" id="editGroundMaterialId" name="id">
+               <div class="mb-3">
+                  <label for="editName" class="form-label">Ground Material</label>
+                  <input type="text" class="form-control" id="editName" name="name" placeholder="Enter Ground Material">
+                  <div id="editGroundMaterialError" class="text-danger mt-2"></div>
+               </div>
+               <button type="submit" class="btn btn-primary">Update Ground Material</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Delete GroundMaterial Modal -->
+<div class="modal fade" id="deleteGroundMaterialModal" tabindex="-1" aria-labelledby="deleteGroundMaterialModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteGroundMaterialModalLabel">Delete GroundMaterial</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'groundmaterial_delete' pk=0 %}" id="deleteGroundMaterialForm"> 
+               {% csrf_token %} 
+               <input type="hidden" id="deleteGroundMaterialId" name="id">
+               <p>Are you sure you want to delete this ground material?</p>
+               <button type="submit" class="btn btn-danger">Delete Ground Material</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %} 
+
+{% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+      // Edit GroundMaterial Modal
+      var editGroundMaterialModal = document.getElementById('editGroundMaterialModal');
+      if (editGroundMaterialModal) {
+         editGroundMaterialModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget; // Button that triggered the modal
+            var groundmaterialId = button.getAttribute('data-groundmaterial-id');
+            var groundmaterialName = button.getAttribute('data-groundmaterial-name');
+            var form = document.getElementById('editGroundMaterialForm');
+            form.action = "{% url 'groundmaterial_update' pk='0' %}".replace('0', groundmaterialId);
+            form.querySelector('#editGroundMaterialId').value = groundmaterialId;
+            form.querySelector('#editName').value = groundmaterialName;
+            // Clear previous error message
+            document.getElementById('editGroundMaterialError').textContent = '';
+         });
+      }
+
+      // Delete GroundMaterial Modal
+      var deleteGroundMaterialModal = document.getElementById('deleteGroundMaterialModal');
+      if (deleteGroundMaterialModal) {
+         deleteGroundMaterialModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget; // Button that triggered the modal
+            var groundmaterialId = button.getAttribute('data-groundmaterial-id');
+            var form = document.getElementById('deleteGroundMaterialForm');
+            form.action = "{% url 'groundmaterial_delete' pk='0' %}".replace('0', groundmaterialId);
+            form.querySelector('#deleteGroundMaterialId').value = groundmaterialId;
+         });
+      }
+
+      // Add GroundMaterial Form Validation
+      var addGroundMaterialForm = document.getElementById('addGroundMaterialForm');
+      if (addGroundMaterialForm) {
+         addGroundMaterialForm.addEventListener('submit', function(event) {
+            var nameInput = document.getElementById('name');
+            var errorContainer = document.getElementById('addGroundMaterialError');
+            var nameValue = nameInput.value.trim();
+
+            // Clear previous error messages
+            errorContainer.textContent = '';
+
+            if (nameValue === '') {
+               event.preventDefault();
+               errorContainer.textContent = 'Ground Material cannot be empty.';
+               return false;
+            }
+
+            // Additional validation for uniqueness can be handled server-side
+         });
+      }
+
+      // Edit GroundMaterial Form Validation
+      var editGroundMaterialForm = document.getElementById('editGroundMaterialForm');
+      if (editGroundMaterialForm) {
+         editGroundMaterialForm.addEventListener('submit', function(event) {
+            var nameInput = document.getElementById('editName');
+            var errorContainer = document.getElementById('editGroundMaterialError');
+            var nameValue = nameInput.value.trim();
+
+            // Clear previous error messages
+            errorContainer.textContent = '';
+
+            if (nameValue === '') {
+               event.preventDefault();
+               errorContainer.textContent = 'Ground Material cannot be empty.';
+               return false;
+            }
+
+            // Additional validation for uniqueness can be handled server-side
+         });
+      }
+   });
+</script> 
+{% endblock %}
