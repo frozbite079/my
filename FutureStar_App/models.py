@@ -248,8 +248,8 @@ class Player_Profile(models.Model):
     favourite_player = models.CharField(max_length=100, blank=True, null=True)
 
     def set_password(self, raw_password):
-        self.password = make_password(raw_password)
-        self.save()
+         self.password = make_password(raw_password)
+         self.save()
 
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
