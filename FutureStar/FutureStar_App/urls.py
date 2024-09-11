@@ -67,13 +67,6 @@ urlpatterns = [
     path('gender/update/<int:pk>/', GenderUpdateView.as_view(), name='gender_update'),
     path('gender/delete/<int:pk>/', GenderDeleteView.as_view(), name='gender_delete'),
 
-
-    # GameType URL
-    path('gametype/', GameTypeListView.as_view(), name='gametype_list'),
-    path('gametype/create/', GameTypeCreateView.as_view(), name='gametype_create'),
-    path('gametype/update/<int:pk>/', GameTypeUpdateView.as_view(), name='gametype_update'),
-    path('gametype/delete/<int:pk>/', GameTypeDeleteView.as_view(), name='gametype_delete'),
-
     # FieldCapacity URL
     path('fieldcapacity/', FieldCapacityListView.as_view(), name='fieldcapacity_list'),
     path('fieldcapacity/create/', FieldCapacityCreateView.as_view(), name='fieldcapacity_create'),
