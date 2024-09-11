@@ -74,14 +74,14 @@ class GenderForm(forms.ModelForm):
         }
 
 
-# GameType Form
-class GameTypeForm(forms.ModelForm):
-    class Meta:
-        model = GameType
-        fields = ["name"]
-        widgets = {
-            "name": forms.TextInput(attrs={"placeholder": "Enter GameType"}),
-        }
+# # GameType Form
+# class GameTypeForm(forms.ModelForm):
+#     class Meta:
+#         model = GameType
+#         fields = ["name"]
+#         widgets = {
+#             "name": forms.TextInput(attrs={"placeholder": "Enter GameType"}),
+#         }
 
 
 # Field Capacity Form

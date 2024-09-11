@@ -99,12 +99,12 @@ class UserGender(models.Model):
         return self.name
 
 
-# Game Type  Model
-class GameType(models.Model):
-    name = models.CharField(max_length=100)
+# # Game Type  Model
+# class GameType(models.Model):
+#     name = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 # Field Capacity  Model
@@ -138,7 +138,11 @@ class EventType(models.Model):
     def __str__(self):
         return self.name
 
+
+#User Profile
 class Player_Profile(models.Model):
+    
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE ,blank=True, null=True)
     
     fullname = models.CharField(max_length=255, blank=True, null=True)
     
@@ -198,70 +202,71 @@ class Player_Profile(models.Model):
         
         
 
-class UserPost(models.Model):
+# class UserPost(models.Model):
     
-    title = models.CharField(max_length=255)  
-    description = models.TextField() 
-    photo = models.ImageField(upload_to='profile_pics/',null=True, blank=True)  
+#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+#     title = models.CharField(max_length=255)  
+#     description = models.TextField() 
+#     photo = models.CharField(upload_to='profile_pics/',null=True, blank=True)  
         
-    class Meta:
-        db_table = "FutureStar_App_UserPost"
+#     class Meta:
+#         db_table = "FutureStar_App_UserPost"
 
-class Sponsor(models.Model):
-    sponsor_name = models.CharField(max_length=255)  
-    sponsor_logo = models.ImageField(upload_to='sponsor_logos/')  
-    phone_number = models.CharField(max_length=20, blank=True, null=True)  
-    email_address = models.EmailField(blank=True, null=True)  
+# class Sponsor(models.Model):
+#     sponsor_name = models.CharField(max_length=255)  
+#     sponsor_logo = models.ImageField(upload_to='sponsor_logos/')  
+#     phone_number = models.CharField(max_length=20, blank=True, null=True)  
+#     email_address = models.EmailField(blank=True, null=True)  
 
-    def __str__(self):
-        return self.sponsor_name
+#     def __str__(self):
+#         return self.sponsor_name
 
-class EditStuff(models.Model):
+# class EditStuff(models.Model):
     
-    role = models.CharField(max_length=20)  
-    name = models.CharField(max_length=255)  
-    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  
-    phone_number = models.CharField(max_length=20, blank=True, null=True) 
-    email_address = models.EmailField(blank=True, null=True)  
-    country = models.CharField(max_length=100)  
-    city = models.CharField(max_length=100)  
+#     role = models.CharField(max_length=20)  
+#     name = models.CharField(max_length=255)  
+#     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)  
+#     phone_number = models.CharField(max_length=20, blank=True, null=True) 
+#     email_address = models.EmailField(blank=True, null=True)  
+#     country = models.CharField(max_length=100)  
+#     city = models.CharField(max_length=100)  
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
-class PlayerBranch(models.Model):
-    name = models.CharField(max_length=255)
+# class PlayerBranch(models.Model):
+#     name = models.CharField(max_length=255)
     
-    position = models.CharField(max_length=100)
+#     position = models.CharField(max_length=100)
     
-    profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+#     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
+#     phone_number = models.CharField(max_length=20, blank=True, null=True)
     
-    email_address = models.EmailField(blank=True, null=True)
+#     email_address = models.EmailField(blank=True, null=True)
     
-    country = models.CharField(max_length=100)
+#     country = models.CharField(max_length=100)
     
-    city = models.CharField(max_length=100)
+#     city = models.CharField(max_length=100)
     
-    weight = models.FloatField()
+#     weight = models.FloatField()
     
-    height = models.FloatField()
+#     height = models.FloatField()
     
-    age = models.PositiveIntegerField()
+#     age = models.PositiveIntegerField()
     
-    date_of_birth = models.DateField()
+#     date_of_birth = models.DateField()
     
-    def __str__(self):
-        return self.name    
+#     def __str__(self):
+#         return self.name    
 
-class FriendlyGame(models.Model):
-    game_number = models.PositiveIntegerField(unique=True)
-    start_date = models.DateField()
-    start_time = models.TimeField()
-    team_A = models.CharField(max_length=255)
-    team_B = models.CharField(max_length=255)
-    game_field = models.CharField(max_length=255)
-    referee_name = models.CharField(max_length=255)
-    def __str__(self):
-        return f"Game {self.game_number}: {self.team_A} vs {self.team_B} on {self.start_date}"    
+# class FriendlyGame(models.Model):
+    # game_number = models.PositiveIntegerField(unique=True)
+    # start_date = models.DateField()
+    # start_time = models.TimeField()
+    # team_A = models.CharField(max_length=255)
+    # team_B = models.CharField(max_length=255)
+    # game_field = models.CharField(max_length=255)
+    # referee_name = models.CharField(max_length=255)
+    # def __str__(self):
+    #     return f"Game {self.game_number}: {self.team_A} vs {self.team_B} on {self.start_date}"    

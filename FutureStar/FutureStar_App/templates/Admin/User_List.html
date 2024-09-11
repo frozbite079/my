@@ -8,12 +8,22 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <!-- Plugins css Ends--> 
 {% endblock %}
-{% block title %}User List{% endblock %}
+{% block title %}Player List{% endblock %}
 
 {% block content %}
 <div class="page-body">
    <div class="container-fluid">
-    {% include "layouts/breadcrumb.html" %}
+    <div class="page-title">
+        <div class="row">
+            <div class="col-6">
+            <h3>{{breadcrumb.child}}</h3>
+            </div>
+            <div class="col-6">
+            </div>
+        </div>
+    </div>
+
+
       <div class="row">
          <div class="col-sm-12">
             <div class="card">
@@ -87,7 +97,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                <h5 class="modal-title" id="editUserModalLabel">Edit Player</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -138,7 +148,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteUserModalLabel">Delete User</h5>
+                <h5 class="modal-title" id="deleteUserModalLabel">Delete Player</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

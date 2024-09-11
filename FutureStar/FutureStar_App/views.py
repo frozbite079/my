@@ -438,7 +438,7 @@ class UserListView(LoginRequiredMixin, View):
             {
                 "users": users,
                 "roles": roles,
-                "breadcrumb": {"parent": "User", "child": "User List"},
+                "breadcrumb": {"child": "Player List"},
             },
         )
 
