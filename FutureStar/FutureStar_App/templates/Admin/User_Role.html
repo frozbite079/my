@@ -1,209 +1,208 @@
-{% extends 'base.html' %}
-
-{% load static %}
-{% load sass_tags %}
-
-{% block css %}
+{% extends 'base.html' %} {% load static %} {% load sass_tags %} {% block css %}
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
-<!-- Plugins css Ends-->
-{% endblock %}
-{% block title %}User Role{% endblock %}
-
-{% block content %}
-
-<div class="page-body">
-    <div class="container-fluid">
-        <div class="page-title">
-            <div class="row">
-              <div class="col-6">
-                <h3>{{breadcrumb.child}}</h3>
-              </div>
-              <div class="col-6">
-                <ol class="breadcrumb">
-                    <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addRoleModal">Add Role</button>
-                </ol>
-              </div>
+<!-- Plugins css Ends--> {% endblock %} {% block title %}User Role{% endblock %} {% block content %} <div class="page-body">
+   <div class="container-fluid">
+      <div class="page-title">
+         <div class="row">
+            <div class="col-6">
+               <h3>{{breadcrumb.child}}</h3>
             </div>
-          </div>        <div class="row">
-            <!-- Role List -->
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="display" id="basic-1">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Name</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for role in roles %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ role.name }}</td>
-                                        <td>
-                                            <ul class="action">
-                                                <li class="edit">
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#editRoleModal" data-role-id="{{ role.id }}" data-role-name="{{ role.name }}"><i class="icon-pencil-alt"></i></a>
-                                                </li>
-                                                <li class="delete">
-                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteRoleModal" data-role-id="{{ role.id }}"><i class="icon-trash"></i></a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-6">
+               <ol class="breadcrumb">
+                  <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addRoleModal">Add Role</button>
+               </ol>
             </div>
-        </div>
-    </div>
+         </div>
+      </div>
+      <div class="row">
+         <!-- Role List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                           <tr>
+                              <th></th>
+                              <th>Name</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody> {% for role in roles %} <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ role.name }}</td>
+                              <td>
+                                 <div class="action-menu-container" style="position: relative; display: inline-block;">
+                                    <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
+                                       <i data-feather="more-vertical"></i>
+                                       <!-- Three dots icon -->
+                                    </a>
+                                    <!-- Hidden card for actions -->
+                                    <div class="action-card" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); z-index: 10; width: 150px;">
+                                       <ul style="list-style: none; padding: 0; margin: 0;">
+                                          <li style="padding: 8px 12px;">
+                                             <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#editRoleModal" data-role-id="{{ role.id }}" data-role-name="{{ role.name }}">
+                                                <i data-feather="edit"></i> Edit </a>
+                                          </li>
+                                          <li style="padding: 8px 12px; border-top: 1px solid #eee;">
+                                             <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#deleteRoleModal" data-role-id="{{ role.id }}">
+                                                <i data-feather="trash-2"></i> Delete </a>
+                                          </li>
+                                       </ul>
+                                    </div>
+                                 </div>
+                              </td>
+                           </tr> {% endfor %} </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
 </div>
-
 <!-- Add Role Modal -->
 <div class="modal fade" id="addRoleModal" tabindex="-1" aria-labelledby="addRoleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addRoleModalLabel">Add Role</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'role_create' %}" id="addRoleForm">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter role name">
-                        <div id="addRoleError" class="text-danger mt-2"></div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add Role</button>
-                </form>
-            </div>
-        </div>
-    </div>
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addRoleModalLabel">Add Role</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'role_create' %}" id="addRoleForm"> {% csrf_token %} <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter role name">
+                  <div id="addRoleError" class="text-danger mt-2"></div>
+               </div>
+               <button type="submit" class="btn btn-primary">Add Role</button>
+            </form>
+         </div>
+      </div>
+   </div>
 </div>
-
 <!-- Edit Role Modal -->
 <div class="modal fade" id="editRoleModal" tabindex="-1" aria-labelledby="editRoleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editRoleModalLabel">Edit Role</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'role_update' pk=0 %}" id="editRoleForm">
-                    {% csrf_token %}
-                    <input type="hidden" id="editRoleId" name="id">
-                    <div class="mb-3">
-                        <label for="editName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="editName" name="name" placeholder="Enter role name">
-                        <div id="editRoleError" class="text-danger mt-2"></div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update Role</button>
-                </form>
-            </div>
-        </div>
-    </div>
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editRoleModalLabel">Edit Role</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'role_update' pk=0 %}" id="editRoleForm"> {% csrf_token %} <input type="hidden" id="editRoleId" name="id">
+               <div class="mb-3">
+                  <label for="editName" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="editName" name="name" placeholder="Enter role name">
+                  <div id="editRoleError" class="text-danger mt-2"></div>
+               </div>
+               <button type="submit" class="btn btn-primary">Update Role</button>
+            </form>
+         </div>
+      </div>
+   </div>
 </div>
-
-
 <!-- Delete Role Modal -->
 <div class="modal fade" id="deleteRoleModal" tabindex="-1" aria-labelledby="deleteRoleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteRoleModalLabel">Delete Role</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="{% url 'role_delete' pk=0 %}" id="deleteRoleForm">
-                    {% csrf_token %}
-                    <input type="hidden" id="deleteRoleId" name="id">
-                    <p>Are you sure you want to delete this role?</p>
-                    <button type="submit" class="btn btn-danger">Delete Role</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
-
-{% block scriptcontent %}
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteRoleModalLabel">Delete Role</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'role_delete' pk=0 %}" id="deleteRoleForm"> {% csrf_token %} <input type="hidden" id="deleteRoleId" name="id">
+               <p>Are you sure you want to delete this role?</p>
+               <button type="submit" class="btn btn-danger">Delete Role</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div> {% endblock %} {% block scriptcontent %}
 <!-- Plugins JS start-->
 <script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
 <script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
 <script src="{% static 'assets/js/tooltip-init.js'%}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var editRoleModal = document.getElementById('editRoleModal');
-        editRoleModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var roleId = button.getAttribute('data-role-id');
-            var roleName = button.getAttribute('data-role-name');
-            var form = document.getElementById('editRoleForm');
-            form.action = "{% url 'role_update' pk='0' %}".replace('0', roleId);
-            form.querySelector('#editRoleId').value = roleId;
-            form.querySelector('#editName').value = roleName;
-            // Clear any previous error messages
-            document.getElementById('editRoleError').textContent = '';
-        });
-
-        var deleteRoleModal = document.getElementById('deleteRoleModal');
-        deleteRoleModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var roleId = button.getAttribute('data-role-id');
-            var form = document.getElementById('deleteRoleForm');
-            form.action = "{% url 'role_delete' pk='0' %}".replace('0', roleId);
-            form.querySelector('#deleteRoleId').value = roleId;
-        });
-
-        // Add Role Form Validation
-        var addRoleForm = document.getElementById('addRoleForm');
-        addRoleForm.addEventListener('submit', function(event) {
-            var nameInput = document.getElementById('name');
-            var errorContainer = document.getElementById('addRoleError');
-            var nameValue = nameInput.value.trim();
-
-            // Clear previous errors
-            errorContainer.textContent = '';
-
-            if (nameValue === '') {
-                event.preventDefault();
-                errorContainer.textContent = 'Role name cannot be empty.';
-                return false;
-            }
-
-            // Additional validation for uniqueness can be handled server-side
-        });
-
-        // Edit Role Form Validation
-        var editRoleForm = document.getElementById('editRoleForm');
-        editRoleForm.addEventListener('submit', function(event) {
-            var nameInput = document.getElementById('editName');
-            var errorContainer = document.getElementById('editRoleError');
-            var nameValue = nameInput.value.trim();
-
-            // Clear previous errors
-            errorContainer.textContent = '';
-
-            if (nameValue === '') {
-                event.preventDefault();
-                errorContainer.textContent = 'Role name cannot be empty.';
-                return false;
-            }
-
-            // Additional validation for uniqueness can be handled server-side
-        });
-    });
+   document.addEventListener('DOMContentLoaded', function() {
+      var editRoleModal = document.getElementById('editRoleModal');
+      editRoleModal.addEventListener('show.bs.modal', function(event) {
+         var button = event.relatedTarget;
+         var roleId = button.getAttribute('data-role-id');
+         var roleName = button.getAttribute('data-role-name');
+         var form = document.getElementById('editRoleForm');
+         form.action = "{% url 'role_update' pk='0' %}".replace('0', roleId);
+         form.querySelector('#editRoleId').value = roleId;
+         form.querySelector('#editName').value = roleName;
+         // Clear any previous error messages
+         document.getElementById('editRoleError').textContent = '';
+      });
+      var deleteRoleModal = document.getElementById('deleteRoleModal');
+      deleteRoleModal.addEventListener('show.bs.modal', function(event) {
+         var button = event.relatedTarget;
+         var roleId = button.getAttribute('data-role-id');
+         var form = document.getElementById('deleteRoleForm');
+         form.action = "{% url 'role_delete' pk='0' %}".replace('0', roleId);
+         form.querySelector('#deleteRoleId').value = roleId;
+      });
+      // Add Role Form Validation
+      var addRoleForm = document.getElementById('addRoleForm');
+      addRoleForm.addEventListener('submit', function(event) {
+         var nameInput = document.getElementById('name');
+         var errorContainer = document.getElementById('addRoleError');
+         var nameValue = nameInput.value.trim();
+         // Clear previous errors
+         errorContainer.textContent = '';
+         if (nameValue === '') {
+            event.preventDefault();
+            errorContainer.textContent = 'Role name cannot be empty.';
+            return false;
+         }
+         // Additional validation for uniqueness can be handled server-side
+      });
+      // Edit Role Form Validation
+      var editRoleForm = document.getElementById('editRoleForm');
+      editRoleForm.addEventListener('submit', function(event) {
+         var nameInput = document.getElementById('editName');
+         var errorContainer = document.getElementById('editRoleError');
+         var nameValue = nameInput.value.trim();
+         // Clear previous errors
+         errorContainer.textContent = '';
+         if (nameValue === '') {
+            event.preventDefault();
+            errorContainer.textContent = 'Role name cannot be empty.';
+            return false;
+         }
+         // Additional validation for uniqueness can be handled server-side
+      });
+   });
 </script>
-
-{% endblock %}
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+      // Toggle the visibility of the action card
+      document.querySelectorAll('.three-dots-menu').forEach(function(menu) {
+         menu.addEventListener('click', function(event) {
+            event.preventDefault();
+            var actionCard = menu.nextElementSibling;
+            actionCard.style.display = (actionCard.style.display === 'none' || actionCard.style.display === '') ? 'block' : 'none';
+            // Close other open action cards
+            document.querySelectorAll('.action-card').forEach(function(card) {
+               if (card !== actionCard) {
+                  card.style.display = 'none';
+               }
+            });
+         });
+      });
+      // Hide action card if clicking outside
+      document.addEventListener('click', function(event) {
+         var isClickInside = event.target.closest('.action-menu-container');
+         if (!isClickInside) {
+            document.querySelectorAll('.action-card').forEach(function(card) {
+               card.style.display = 'none';
+            });
+         }
+      });
+   });
+</script> {% endblock %}
