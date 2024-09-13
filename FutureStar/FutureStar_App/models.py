@@ -200,7 +200,14 @@ class Player_Profile(models.Model):
     def __str__(self):
         return self.fullname if self.fullname else 'Player Profile'
         
-        
+class News(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    image = models.ImageField(upload_to='news/', blank=True, null=True)
+    news_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title    
 
 # class UserPost(models.Model):
     
@@ -269,4 +276,9 @@ class Player_Profile(models.Model):
     # game_field = models.CharField(max_length=255)
     # referee_name = models.CharField(max_length=255)
     # def __str__(self):
-    #     return f"Game {self.game_number}: {self.team_A} vs {self.team_B} on {self.start_date}"    
+    #     return f"Game {self.game_number}: {self.team_A} vs {self.team_B} on {self.start_date}"
+    # 
+
+# News Module  Model
+
+ 

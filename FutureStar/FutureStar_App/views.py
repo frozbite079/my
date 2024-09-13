@@ -1012,9 +1012,90 @@ class EventTypeListView(LoginRequiredMixin, View):
                 "breadcrumb": {"parent": "General Settings", "child": "Event Types"},
             },
         )
-        
+
+########################## CMS PAGES #################################        
 class CMSPages(LoginRequiredMixin, View):
     template_name = "Admin/cmspages.html"
 
     def get(self,request):
         return render(request, self.template_name)
+    
+
+#################################### News Module ###############################################
+class NewsListView(LoginRequiredMixin, View):
+    template_name = "Admin/News/News_List.html"
+
+    def get(self, request):
+        news = News.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "news": news,
+                "breadcrumb": {"child": "News List"},
+            },
+        )
+
+class NewsCreateView(View):
+    def post(self, request):
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+
+        if not title or not description:
+            messages.error(request, "Title and Description are required.")
+            return redirect('news_list')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'news'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'news/' + image_name
+
+        news = News.objects.create(
+            title=title,
+            description=description,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "News created successfully.")
+        return redirect('news_list')
+
+class NewsEditView(View):
+    template_name = "Admin/News/News_List.html"
+
+    def post(self, request, news_id):
+        news_item = get_object_or_404(News, id=news_id)
+
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+
+        if not title or not description:
+            messages.error(request, "Title and Description are required.")
+            return redirect('news_list')
+
+        news_item.title = title
+        news_item.description = description
+
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'news'))
+            if news_item.image and news_item.image.path:
+                old_image_path = news_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            news_item.image = 'news/' + image_name
+
+        news_item.save()
+
+        messages.success(request, "News updated successfully.")
+        return redirect('news_list')
+
+class NewsDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        news = get_object_or_404(News, pk=pk)
+        news.delete()
+        messages.success(request, "News Deleted Successfully.")
+        return redirect("news_list")

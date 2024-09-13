@@ -179,3 +179,15 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             attrs={"autocomplete": "new-password", "class": "form-control"}
         ),
     )
+
+
+#News Form
+class NewsForm(forms.ModelForm):
+    class Meta:
+        model = News
+        fields = ["title", "description", "image"]
+        widgets = {
+            "title": forms.TextInput(attrs={"placeholder": "Enter news title"}),
+            "description": forms.Textarea(attrs={"placeholder": "Enter news description"}),
+            "image": forms.TextInput(attrs={"placeholder": "Enter image URL or upload path"}),
+        }

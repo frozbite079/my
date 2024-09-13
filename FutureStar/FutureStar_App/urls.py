@@ -92,11 +92,17 @@ urlpatterns = [
     path('eventtype/update/<int:pk>/', EventTypeUpdateView.as_view(), name='eventtype_update'),
     path('eventtype/delete/<int:pk>/', EventTypeDeleteView.as_view(), name='eventtype_delete'),
     
-    
+    # CMS Pages URLS
     path('cmspages/',CMSPages.as_view(),name = "cmspages_urls"),
-    
 
-]
+    #News List URL
+    path('news/', NewsListView.as_view(), name='news_list'),
+    path('news/create/', NewsCreateView.as_view(), name='news_create'),
+    path('news/edit/<int:news_id>/', NewsEditView.as_view(), name='news_edit'),  # Edit URL
+    path('news/delete/<int:pk>/', NewsDeleteView.as_view(), name='news_delete'),
 
+
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   
 
 

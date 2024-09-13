@@ -116,6 +116,15 @@
                </li>
 
                <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'news_list' %}">
+                     <svg class="stroke-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-email"></use>
+                     </svg>
+                     <span class="lan">News</span>
+                  </a>
+               </li>
+
+               <li class="sidebar">
                   <a class="sidebar-link sidebar-title link-nav" href="{% url 'cmspages_urls' %}">
                      <svg class="stroke-icon">
                         <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-sample-page"></use>
