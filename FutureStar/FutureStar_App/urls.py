@@ -101,7 +101,32 @@ urlpatterns = [
     path('news/edit/<int:news_id>/', NewsEditView.as_view(), name='news_edit'),  # Edit URL
     path('news/delete/<int:pk>/', NewsDeleteView.as_view(), name='news_delete'),
 
+    #Partners List URL
+    path('partners/', PartnersListView.as_view(), name='partners_list'),
+    path('partners/create/', PartnersCreateView.as_view(), name='partners_create'),
+    path('partners/edit/<int:partners_id>/', PartnersEditView.as_view(), name='partners_edit'),  # Edit URL
+    path('partners/delete/<int:pk>/', PartnersDeleteView.as_view(), name='partners_delete'),
 
+    #Global_Clients List URL
+    path('global_clients/', Global_ClientsListView.as_view(), name='global_clients_list'),
+    path('global_clients/create/', Global_ClientsCreateView.as_view(), name='global_clients_create'),
+    path('global_clients/edit/<int:global_clients_id>/', Global_ClientsEditView.as_view(), name='global_clients_edit'),  # Edit URL
+    path('global_clients/delete/<int:pk>/', Global_ClientsDeleteView.as_view(), name='global_clients_delete'),
+
+    #Tryout Club List URL
+    path('tryout_club/', Tryout_ClubListView.as_view(), name='tryout_club_list'),
+    path('tryout_club/create/', Tryout_ClubCreateView.as_view(), name='tryout_club_create'),
+    path('tryout_club/edit/<int:tryout_club_id>/', Tryout_ClubEditView.as_view(), name='tryout_club_edit'),  # Edit URL
+    path('tryout_club/delete/<int:pk>/', Tryout_ClubDeleteView.as_view(), name='tryout_club_delete'),
+
+    #Inquires List URL
+    path('inquire/', InquireListView.as_view(), name='inquire_list'),
+
+    #Tryout Club List URL
+    path('testimonial/', TestimonialListView.as_view(), name='testimonial_list'),
+    path('testimonial/create/', TestimonialCreateView.as_view(), name='testimonial_create'),
+    path('testimonial/edit/<int:testimonial_id>/', TestimonialEditView.as_view(), name='testimonial_edit'),  # Edit URL
+    path('testimonial/delete/<int:pk>/', TestimonialDeleteView.as_view(), name='testimonial_delete'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   
 

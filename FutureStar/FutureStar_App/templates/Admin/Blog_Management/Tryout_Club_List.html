@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock %}
+<style>
+   .is-invalid {
+   border-color: #dc3545;
+   background-color: #f8d7da;
+}
+
+</style>
+{% block title %}
+Tryout Club Management
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+   <div class="container-fluid">
+      <div class="page-title">
+         <div class="row">
+            <div class="col-6">
+               <h3>{{breadcrumb.child}}</h3>
+            </div>
+            <div class="col-6">
+               <ol class="breadcrumb">
+                  <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addTryout_ClubModal">Add Tryout Club</button>
+               </ol>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <!-- Tryout_Club List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th> <!-- New column for the image -->
+                                <th>Title</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for tryout_club_item in tryout_club %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    {% if tryout_club_item.image %}
+                                        <img src="{{ tryout_club_item.image.url }}" alt="{{ tryout_club_item.title }}" width="100" height="auto">
+                                    {% else %}
+                                        No Image
+                                    {% endif %}
+                                </td>                                
+                                <td>{{ tryout_club_item.title }}</td>
+                                <td>
+                                    <!-- Action buttons -->
+                                    <div class="action-menu-container" style="position: relative; display: inline-block;">
+                                        <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
+                                            <i data-feather="more-vertical"></i>
+                                        </a>
+                                        <div class="action-card" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); z-index: 10; width: 150px;">
+                                          <ul style="list-style: none; padding: 0; margin: 0;">
+                                             <li style="padding: 8px 12px;">
+                                                <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#editTryout_ClubModal"  data-tryout_club-id="{{ tryout_club_item.id }}" 
+                                                data-tryout_club-title="{{ tryout_club_item.title }}" 
+                                                data-tryout_club-image="{{ tryout_club_item.image.url }}">
+                                                   <i data-feather="edit"></i> Edit </a>
+                                             </li>
+                                             <li style="padding: 8px 12px; border-top: 1px solid #eee;">
+                                                <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#deleteTryout_ClubModal" data-tryout_club-id="{{ tryout_club_item.id }}">
+                                                   <i data-feather="trash-2"></i> Delete </a>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>                        
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Add Tryout_Club Modal -->
+<div class="modal fade" id="addTryout_ClubModal" tabindex="-1" aria-labelledby="addTryout_ClubModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addTryout_ClubModalLabel">Add Tryout Club</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'tryout_club_create' %}" id="addTryout_ClubForm" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="mb-3">
+                  <label for="title" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="title" name="title" placeholder="Enter Tryout_Club Title">
+                  <div class="invalid-feedback" id="title-error"></div> <!-- Error message container -->
+               </div>
+               <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    <div class="invalid-feedback" id="image-error"></div> <!-- Error message container -->
+                </div>
+               <button type="submit" class="btn btn-primary">Add Tryout Club</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- Edit Tryout_Club Modal -->
+<div class="modal fade" id="editTryout_ClubModal" tabindex="-1" aria-labelledby="editTryout_ClubModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editTryout_ClubModalLabel">Edit Tryout Club</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" id="editTryout_ClubForm" enctype="multipart/form-data">
+               {% csrf_token %}
+               <input type="hidden" id="editTryout_ClubId" name="id">
+               <div class="mb-3">
+                  <label for="editTitle" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="editTitle" name="title" placeholder="Enter Tryout Club Title">
+                  <div class="invalid-feedback" id="edit-title-error"></div> <!-- Error message container -->
+               </div>
+               <div class="mb-3">
+                  <label for="editImage" class="form-label">Image</label>
+                  <input type="file" class="form-control" id="editImage" name="image">
+                  <img id="editTryout_ClubImagePreview" style="width: 100px; margin-top: 10px;">
+               </div>
+               <button type="submit" class="btn btn-primary">Update Tryout Club</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- Delete Tryout_Club Modal -->
+<div class="modal fade" id="deleteTryout_ClubModal" tabindex="-1" aria-labelledby="deleteTryout_ClubModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteTryout_ClubModalLabel">Delete Tryout Club</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="" id="deleteTryout_ClubForm">
+               {% csrf_token %}
+               <input type="hidden" id="deleteTryout_ClubId" name="id">
+               <p>Are you sure you want to delete this Tryout Club?</p>
+               <button type="submit" class="btn btn-danger">Delete Tryout Club</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<!-- Plugins JS Ends-->
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    // Edit Tryout_Club Modal
+    var editTryout_ClubModal = document.getElementById('editTryout_ClubModal');
+    if (editTryout_ClubModal) {
+        editTryout_ClubModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var tryout_clubId = button.getAttribute('data-tryout_club-id');
+            var tryout_clubTitle = button.getAttribute('data-tryout_club-title');
+            var tryout_clubImageUrl = button.getAttribute('data-tryout_club-image');
+
+            var form = document.getElementById('editTryout_ClubForm');
+            form.action = "{% url 'tryout_club_edit' 0 %}".replace('0', tryout_clubId);
+
+            form.querySelector('#editTryout_ClubId').value = tryout_clubId;
+            form.querySelector('#editTitle').value = tryout_clubTitle;
+
+            var imagePreview = document.getElementById('editTryout_ClubImagePreview');
+            if (tryout_clubImageUrl) {
+                imagePreview.src = tryout_clubImageUrl;
+                imagePreview.style.display = 'block';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+    }
+
+    // Delete Tryout_Club Modal
+    var deleteTryout_ClubModal = document.getElementById('deleteTryout_ClubModal');
+    if (deleteTryout_ClubModal) {
+        deleteTryout_ClubModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var tryout_clubId = button.getAttribute('data-tryout_club-id');
+            var deleteForm = document.getElementById('deleteTryout_ClubForm');
+            deleteForm.action = "{% url 'tryout_club_delete' 0 %}".replace('0', tryout_clubId);
+        });
+    }
+});
+
+// Form validation for Add and Edit Tryout_Club modals
+function validateForm(form) {
+    var title = form.querySelector('input[name="title"]');
+    var image = form.querySelector('input[name="image"]');
+    var isValid = true;
+
+    // Title validation
+    if (title.value.trim() === '') {
+        title.classList.add('is-invalid');
+        var titleErrorId = form.id === 'addTryout_ClubForm' ? 'title-error' : 'edit-title-error';
+        document.getElementById(titleErrorId).textContent = 'This field is required.';
+        isValid = false;
+    } else {
+        title.classList.remove('is-invalid');
+        var titleErrorId = form.id === 'addTryout_ClubForm' ? 'title-error' : 'edit-title-error';
+        document.getElementById(titleErrorId).textContent = '';
+    }
+
+    // Image validation (only for Add Tryout_Club)
+    if (form.id === 'addTryout_ClubForm' && image.files.length === 0) {
+        image.classList.add('is-invalid');
+        document.getElementById('image-error').textContent = 'An image is required.';
+        isValid = false;
+    } else {
+        image.classList.remove('is-invalid');
+        document.getElementById('image-error').textContent = '';
+    }
+
+    return isValid;
+}
+
+document.getElementById('addTryout_ClubForm').addEventListener('submit', function(event) {
+    var form = event.target;
+    if (!validateForm(form)) {
+        event.preventDefault(); // Prevent form submission
+    }
+});
+
+document.getElementById('editTryout_ClubForm').addEventListener('submit', function(event) {
+    var form = event.target;
+    if (!validateForm(form)) {
+        event.preventDefault(); // Prevent form submission
+    }
+});
+
+// Toggle the visibility of the action card
+document.querySelectorAll('.three-dots-menu').forEach(function(menu) {
+    menu.addEventListener('click', function(event) {
+        event.preventDefault();
+        var actionCard = menu.nextElementSibling;
+        actionCard.style.display = (actionCard.style.display === 'none' || actionCard.style.display === '') ? 'block' : 'none';
+        // Close other open action cards
+        document.querySelectorAll('.action-card').forEach(function(card) {
+            if (card !== actionCard) {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Hide action card if clicking outside
+document.addEventListener('click', function(event) {
+    var isClickInside = event.target.closest('.action-menu-container');
+    if (!isClickInside) {
+        document.querySelectorAll('.action-card').forEach(function(card) {
+            card.style.display = 'none';
+        });
+    }
+});
+</script>
+
+{% endblock %}

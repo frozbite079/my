@@ -7,6 +7,14 @@ from django.db import models
 
 from django.contrib.auth.hashers import make_password, check_password
 
+# Inquire Blog Management    
+class Inquire(models.Model):
+    fullname = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    message = models.TextField()  
+
+    
 # Role Model
 class Role(models.Model):
     name = models.CharField(max_length=100)
@@ -199,7 +207,8 @@ class Player_Profile(models.Model):
     
     def __str__(self):
         return self.fullname if self.fullname else 'Player Profile'
-        
+
+#News Blog Management        
 class News(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -207,7 +216,42 @@ class News(models.Model):
     news_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title    
+        return self.title
+
+# Partners Blog Management
+class Partners(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='partners/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title        
+
+# Global Clients Blog Management
+class Global_Clients(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='global_clients/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title        
+
+# Tryout Club Blog Management    
+class Tryout_Club(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='tryout_club/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+# Tryout Club Blog Management    
+class Testimonial(models.Model):
+    name = models.CharField(max_length=255)
+    designation = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='testimonial/', blank=True, null=True)
+    content = models.TextField()
+    rattings = models.CharField(max_length=5)
+
+    def __str__(self):
+        return self.name        
 
 # class UserPost(models.Model):
     

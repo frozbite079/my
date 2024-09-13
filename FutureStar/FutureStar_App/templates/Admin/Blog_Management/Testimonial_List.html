@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock %}
+<style>
+   .is-invalid {
+   border-color: #dc3545;
+   background-color: #f8d7da;
+}
+
+</style>
+{% block title %}
+Testimonial Management
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+    <div class="container-fluid">
+       <div class="page-title">
+          <div class="row">
+             <div class="col-6">
+                <h3>{{breadcrumb.child}}</h3>
+             </div>
+             <div class="col-6">
+                <ol class="breadcrumb">
+                   <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addTestimonialModal">Add Testimonial</button>
+                </ol>
+             </div>
+          </div>
+       </div>
+       <div class="row">
+          <!-- Testimonial List -->
+          <div class="col-sm-12">
+             <div class="card">
+                <div class="card-body">
+                   <div class="table-responsive">
+                      <table class="display" id="basic-1">
+                         <thead>
+                             <tr>
+                                 <th>ID</th>
+                                 <th>Image</th> <!-- Ensure this column is included -->
+                                 <th>Name</th>
+                                 <th>Designation</th>
+                                 <th>Content</th>
+                                 <th>Ratings</th>
+                                 <th>Actions</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             {% for testimonial_item in testimonial %}
+                             <tr>
+                                 <td>{{ forloop.counter }}</td>
+                                 <td>
+                                     {% if testimonial_item.image %}
+                                         <img src="{{ testimonial_item.image.url }}" alt="{{ testimonial_item.name }}" width="100" height="auto">
+                                     {% else %}
+                                         No Image
+                                     {% endif %}
+                                 </td>
+                                 <td>{{ testimonial_item.name }}</td>
+                                 <td>{{ testimonial_item.designation }}</td>
+                                 <td>{{ testimonial_item.content }}</td>
+                                 <td>{{ testimonial_item.rattings }}</td>
+                                 <td>
+                                     <!-- Action buttons -->
+                                     <div class="action-menu-container" style="position: relative; display: inline-block;">
+                                         <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
+                                             <i data-feather="more-vertical"></i>
+                                         </a>
+                                         <div class="action-card" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); z-index: 10; width: 150px;">
+                                           <ul style="list-style: none; padding: 0; margin: 0;">
+                                              <li style="padding: 8px 12px;">
+                                                 <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#editTestimonialModal"  
+                                                 data-testimonial-id="{{ testimonial_item.id }}" 
+                                                 data-testimonial-name="{{ testimonial_item.name }}" 
+                                                 data-testimonial-designation="{{ testimonial_item.designation }}"
+                                                 data-testimonial-content="{{ testimonial_item.content }}"
+                                                 data-testimonial-rattings="{{ testimonial_item.rattings }}"
+                                                 data-testimonial-image="{{ testimonial_item.image.url }}">
+                                                    <i data-feather="edit"></i> Edit </a>
+                                              </li>
+                                              <li style="padding: 8px 12px; border-top: 1px solid #eee;">
+                                                 <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#deleteTestimonialModal" data-testimonial-id="{{ testimonial_item.id }}">
+                                                    <i data-feather="trash-2"></i> Delete </a>
+                                              </li>
+                                           </ul>
+                                        </div>
+                                     </div>
+                                 </td>
+                             </tr>
+                             {% endfor %}
+                         </tbody>                        
+                      </table>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+ 
+
+<!-- Add Testimonial Modal -->
+<div class="modal fade" id="addTestimonialModal" tabindex="-1" aria-labelledby="addTestimonialModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addTestimonialModalLabel">Add Testimonial</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'testimonial_create' %}" id="addTestimonialForm" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="mb-3">
+                  <label for="name" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter Testimonial Name">
+                  <div class="invalid-feedback" id="name-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="designation" class="form-label">Designation</label>
+                  <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter Designation">
+                  <div class="invalid-feedback" id="designation-error"></div>
+               </div>
+               <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    <div class="invalid-feedback" id="image-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="content" class="form-label">Content</label>
+                  <textarea class="form-control" id="content" name="content" placeholder="Enter Content"></textarea>
+                  <div class="invalid-feedback" id="content-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="rattings" class="form-label">Rattings</label>
+                  <input type="text" class="form-control" id="rattings" name="rattings" placeholder="Enter Rattings">
+                  <div class="invalid-feedback" id="rattings-error"></div>
+               </div>
+               <button type="submit" class="btn btn-primary">Add Testimonial</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Edit Testimonial Modal -->
+<div class="modal fade" id="editTestimonialModal" tabindex="-1" aria-labelledby="editTestimonialModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editTestimonialModalLabel">Edit Testimonial</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" id="editTestimonialForm" enctype="multipart/form-data">
+               {% csrf_token %}
+               <input type="hidden" id="editTestimonialId" name="id">
+               <div class="mb-3">
+                  <label for="editName" class="form-label">Name</label>
+                  <input type="text" class="form-control" id="editName" name="name" placeholder="Enter Testimonial Name">
+                  <div class="invalid-feedback" id="edit-name-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="editDesignation" class="form-label">Designation</label>
+                  <input type="text" class="form-control" id="editDesignation" name="designation">
+                  <div class="invalid-feedback" id="edit-designation-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="editContent" class="form-label">Content</label>
+                  <textarea class="form-control" id="editContent" name="content"></textarea>
+                  <div class="invalid-feedback" id="edit-content-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="editRattings" class="form-label">Rattings</label>
+                  <input type="text" class="form-control" id="editRattings" name="rattings">
+                  <div class="invalid-feedback" id="edit-rattings-error"></div>
+               </div>
+               <div class="mb-3">
+                  <label for="editImage" class="form-label">Image</label>
+                  <input type="file" class="form-control" id="editImage" name="image">
+                  <img id="editTestimonialImagePreview" style="width: 100px; margin-top: 10px;">
+                  <div class="invalid-feedback" id="edit-image-error"></div>
+               </div>
+               <button type="submit" class="btn btn-primary">Update Testimonial</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+       // Edit Testimonial Modal
+       var editTestimonialModal = document.getElementById('editTestimonialModal');
+       if (editTestimonialModal) {
+          editTestimonialModal.addEventListener('show.bs.modal', function(event) {
+             var button = event.relatedTarget;
+             var testimonialId = button.getAttribute('data-testimonial-id');
+             var name = button.getAttribute('data-testimonial-name');
+             var designation = button.getAttribute('data-testimonial-designation');
+             var content = button.getAttribute('data-testimonial-content');
+             var rattings = button.getAttribute('data-testimonial-rattings');
+             var imageUrl = button.getAttribute('data-testimonial-image');
+ 
+             var form = document.getElementById('editTestimonialForm');
+             form.action = "{% url 'testimonial_edit' 0 %}".replace('0', testimonialId);
+ 
+             form.querySelector('#editTestimonialId').value = testimonialId;
+             form.querySelector('#editName').value = name;
+             form.querySelector('#editDesignation').value = designation;
+             form.querySelector('#editContent').value = content;
+             form.querySelector('#editRattings').value = rattings;
+ 
+             var imagePreview = document.getElementById('editTestimonialImagePreview');
+             if (imageUrl) {
+                imagePreview.src = imageUrl;
+                imagePreview.style.display = 'block';
+             } else {
+                imagePreview.style.display = 'none';
+             }
+          });
+       }
+ 
+       // Delete Testimonial Modal
+       var deleteTestimonialModal = document.getElementById('deleteTestimonialModal');
+       if (deleteTestimonialModal) {
+          deleteTestimonialModal.addEventListener('show.bs.modal', function(event) {
+             var button = event.relatedTarget;
+             var testimonialId = button.getAttribute('data-testimonial-id');
+             var deleteForm = document.getElementById('deleteTestimonialForm');
+             deleteForm.action = "{% url 'testimonial_delete' 0 %}".replace('0', testimonialId);
+          });
+       }
+ 
+        // Form validation for Add and Edit modals
+        function validateForm(form) {
+            var name = form.querySelector('input[name="name"]');
+            var designation = form.querySelector('input[name="designation"]');
+            var content = form.querySelector('textarea[name="content"]');
+            var rattings = form.querySelector('input[name="rattings"]');
+            var image = form.querySelector('input[name="image"]');
+            var isValid = true;
+
+            // Name validation
+            if (name.value.trim() === '') {
+                name.classList.add('is-invalid');
+                var nameErrorId = form.id === 'addTestimonialForm' ? 'name-error' : 'edit-name-error';
+                document.getElementById(nameErrorId).textContent = 'This field is required.';
+                isValid = false;
+            } else {
+                name.classList.remove('is-invalid');
+                var nameErrorId = form.id === 'addTestimonialForm' ? 'name-error' : 'edit-name-error';
+                document.getElementById(nameErrorId).textContent = '';
+            }
+
+            // Designation validation
+            if (designation.value.trim() === '') {
+                designation.classList.add('is-invalid');
+                var designationErrorId = form.id === 'addTestimonialForm' ? 'designation-error' : 'edit-designation-error';
+                document.getElementById(designationErrorId).textContent = 'This field is required.';
+                isValid = false;
+            } else {
+                designation.classList.remove('is-invalid');
+                var designationErrorId = form.id === 'addTestimonialForm' ? 'designation-error' : 'edit-designation-error';
+                document.getElementById(designationErrorId).textContent = '';
+            }
+
+            // Content validation
+            if (content.value.trim() === '') {
+                content.classList.add('is-invalid');
+                var contentErrorId = form.id === 'addTestimonialForm' ? 'content-error' : 'edit-content-error';
+                document.getElementById(contentErrorId).textContent = 'This field is required.';
+                isValid = false;
+            } else {
+                content.classList.remove('is-invalid');
+                var contentErrorId = form.id === 'addTestimonialForm' ? 'content-error' : 'edit-content-error';
+                document.getElementById(contentErrorId).textContent = '';
+            }
+
+            // Ratings validation (optional: you can adjust this to ensure a specific range)
+            if (rattings.value.trim() === '') {
+                rattings.classList.add('is-invalid');
+                var rattingsErrorId = form.id === 'addTestimonialForm' ? 'rattings-error' : 'edit-rattings-error';
+                document.getElementById(rattingsErrorId).textContent = 'This field is required.';
+                isValid = false;
+            } else {
+                rattings.classList.remove('is-invalid');
+                var rattingsErrorId = form.id === 'addTestimonialForm' ? 'rattings-error' : 'edit-rattings-error';
+                document.getElementById(rattingsErrorId).textContent = '';
+            }
+
+            // Image validation (only for Add)
+            if (form.id === 'addTestimonialForm' && image.files.length === 0) {
+                image.classList.add('is-invalid');
+                document.getElementById('image-error').textContent = 'An image is required.';
+                isValid = false;
+            } else {
+                image.classList.remove('is-invalid');
+                document.getElementById('image-error').textContent = '';
+            }
+
+            return isValid;
+        }
+
+ 
+       document.getElementById('addTestimonialForm').addEventListener('submit', function(event) {
+          var form = event.target;
+          if (!validateForm(form)) {
+             event.preventDefault(); // Prevent form submission
+          }
+       });
+ 
+       document.getElementById('editTestimonialForm').addEventListener('submit', function(event) {
+          var form = event.target;
+          if (!validateForm(form)) {
+             event.preventDefault(); // Prevent form submission
+          }
+       });
+ 
+       // Toggle visibility of the action card
+       document.querySelectorAll('.three-dots-menu').forEach(function(menu) {
+          menu.addEventListener('click', function(event) {
+             event.preventDefault();
+             var actionCard = menu.nextElementSibling;
+             actionCard.style.display = (actionCard.style.display === 'none' || actionCard.style.display === '') ? 'block' : 'none';
+ 
+             // Close other open action cards
+             document.querySelectorAll('.action-card').forEach(function(card) {
+                if (card !== actionCard) {
+                   card.style.display = 'none';
+                }
+             });
+          });
+       });
+ 
+       // Hide action card when clicking outside
+       document.addEventListener('click', function(event) {
+          var isClickInside = event.target.closest('.action-menu-container');
+          if (!isClickInside) {
+             document.querySelectorAll('.action-card').forEach(function(card) {
+                card.style.display = 'none';
+             });
+          }
+       });
+    });
+ </script>
+ 
+ 
+{% endblock %}

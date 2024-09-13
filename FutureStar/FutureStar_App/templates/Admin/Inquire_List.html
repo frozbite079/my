@@ -1,0 +1,163 @@
+{% extends 'base.html' %} {% load static %} {% load sass_tags %} {% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends--> {% endblock %} {% block title %}Inquire{% endblock %}
+{% block content %} 
+<style>
+   .modal-content {
+    border-radius: 10px;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-body p {
+    background-color: #f9f9f9;
+    font-size: 16px;
+    color: #333;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.modal-padding-space {
+    padding: 10px;
+}
+
+</style>
+<div class="page-body">
+   <div class="container-fluid"> 
+    <div class="page-title">
+        <div class="row">
+          <div class="col-6">
+            <h3>{{breadcrumb.child}}</h3>
+          </div>
+          <div class="col-6">
+            <ol class="breadcrumb">
+            </ol>
+          </div>
+        </div>
+      </div>
+    <div class="row">
+         <!-- Inquire List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                           <tr>
+                              <th>ID No.</th>
+                              <th>Full Name</th>
+                              <th>Phone</th>
+                              <th>Email</th>
+                              <th>Message</th>
+                              <th>Actions</th>
+                           </tr>
+                        </thead>
+                        <tbody> {% for inquire in inquire %} <tr>
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ inquire.fullname }}</td>
+                              <td>{{ inquire.phone }}</td>
+                              <td>{{ inquire.email }}</td>
+                              <td>
+                                 {{ inquire.message|slice:":30" }}...
+                                 <a href="#" class="read-more-link text-primary" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#viewInquireModal" 
+                                    data-inquire-fullname="{{ inquire.fullname }}"
+                                    data-inquire-phone="{{ inquire.phone }}"
+                                    data-inquire-email="{{ inquire.email }}"
+                                    data-inquire-message="{{ inquire.message }}">
+                                    Read more
+                                 </a>
+                              </td>
+                              <td>
+                                 <ul class="action">
+                                    <li class="view">
+                                       <a href="#" data-bs-toggle="modal" data-bs-target="#viewInquireModal" data-inquire-id="{{ inquire.id }}" data-inquire-fullname="{{ inquire.fullname }}"
+                                       data-inquire-phone="{{ inquire.phone }}"
+                                       data-inquire-email="{{ inquire.email }}"
+                                       data-inquire-message="{{ inquire.message }}">
+                                          <i class="icon-eye"></i>
+                                       </a>
+                                    </li>
+                                 </ul>
+                              </td>
+                           </tr> {% endfor %} </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- View Inquire Modal -->
+<div class="modal fade bd-example-modal-lg" id="viewInquireModal" tabindex="-1" aria-labelledby="viewInquireModalLabel" aria-hidden="true">
+   <div class="modal-dialog modal-lg">
+       <div class="modal-content shadow-lg border-0 rounded">
+           <div class="modal-header bg-primary text-white">
+               <h5 class="modal-title" id="viewInquireModalLabel">Inquire Details</h5>
+               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+           </div>
+           <div class="modal-body p-4">
+               <div class="row">
+                   <div class="col-md-6 mb-3">
+                       <label for="inquireFullName" class="form-label fw-bold">Full Name</label>
+                       <p class="border rounded p-2" id="inquireFullName"></p>
+                   </div>
+                   <div class="col-md-6 mb-3">
+                       <label for="inquirePhone" class="form-label fw-bold">Phone</label>
+                       <p class="border rounded p-2" id="inquirePhone"></p>
+                   </div>
+               </div>
+               <div class="row">
+                   <div class="col-md-6 mb-3">
+                       <label for="inquireEmail" class="form-label fw-bold">Email</label>
+                       <p class="border rounded p-2" id="inquireEmail"></p>
+                   </div>
+                   <div class="col-md-12 mb-3">
+                       <label for="inquireMessage" class="form-label fw-bold">Message</label>
+                       <textarea class="form-control" id="inquireMessage" rows="6" readonly></textarea>
+                   </div>
+               </div>
+           </div>
+           <div class="modal-footer justify-content-between">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+           </div>
+       </div>
+   </div>
+</div>
+
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+       var viewInquireModal = document.getElementById('viewInquireModal');
+       viewInquireModal.addEventListener('show.bs.modal', function (event) {
+           var button = event.relatedTarget; // Button that triggered the modal
+           var inquireFullName = button.getAttribute('data-inquire-fullname');
+           var inquirePhone = button.getAttribute('data-inquire-phone');
+           var inquireEmail = button.getAttribute('data-inquire-email');
+           var inquireMessage = button.getAttribute('data-inquire-message');
+   
+           // Populate the modal with the corresponding inquiry data using textContent or innerText for <p> tags
+           viewInquireModal.querySelector('#inquireFullName').textContent = inquireFullName;
+           viewInquireModal.querySelector('#inquirePhone').textContent = inquirePhone;
+           viewInquireModal.querySelector('#inquireEmail').textContent = inquireEmail;
+           viewInquireModal.querySelector('#inquireMessage').textContent = inquireMessage;
+       });
+   });
+   </script>
+   
+   
+{% endblock %} {% block scriptcontent %}
+<!-- Plugins JS start-->
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+ {% endblock %}

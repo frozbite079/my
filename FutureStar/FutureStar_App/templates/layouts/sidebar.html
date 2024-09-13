@@ -115,12 +115,41 @@
                   </ul>
                </li>
 
-               <li class="sidebar">
-                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'news_list' %}">
+               <li class="sidebar-list">
+                  <a class="sidebar-link sidebar-title" href="#">
                      <svg class="stroke-icon">
-                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-email"></use>
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-widget"></use>
                      </svg>
-                     <span class="lan">News</span>
+                     <svg class="fill-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#fill-widget"></use>
+                     </svg>
+                     <span class="lan">Blog Management</span>
+                  </a>
+                  <ul class="sidebar-submenu">
+                     <li>
+                        <a href="{% url 'news_list' %}">News</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'partners_list' %}">Partners</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'global_clients_list' %}">Global Clients</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'tryout_club_list' %}">Tryout Club</a>
+                     </li>
+                     <li>
+                        <a href="{% url 'testimonial_list' %}">Testimonial</a>
+                     </li>
+                  </ul>
+               </li>
+
+               <li class="sidebar">
+                  <a class="sidebar-link sidebar-title link-nav" href="{% url 'inquire_list' %}">
+                     <svg class="stroke-icon">
+                        <use href="{% static 'assets/svg/icon-sprite.svg'%}#stroke-sample-page"></use>
+                     </svg>
+                     <span class="lan">Inquires</span>
                   </a>
                </li>
 

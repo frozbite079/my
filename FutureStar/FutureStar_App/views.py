@@ -1023,7 +1023,7 @@ class CMSPages(LoginRequiredMixin, View):
 
 #################################### News Module ###############################################
 class NewsListView(LoginRequiredMixin, View):
-    template_name = "Admin/News/News_List.html"
+    template_name = "Admin/Blog_Management/News_List.html"
 
     def get(self, request):
         news = News.objects.all()
@@ -1063,7 +1063,7 @@ class NewsCreateView(View):
         return redirect('news_list')
 
 class NewsEditView(View):
-    template_name = "Admin/News/News_List.html"
+    template_name = "Admin/Blog_Management/News_List.html"
 
     def post(self, request, news_id):
         news_item = get_object_or_404(News, id=news_id)
@@ -1099,3 +1099,327 @@ class NewsDeleteView(LoginRequiredMixin, View):
         news.delete()
         messages.success(request, "News Deleted Successfully.")
         return redirect("news_list")
+
+
+
+
+#################################### Partners Module ###############################################
+class PartnersListView(LoginRequiredMixin, View):
+    template_name = "Admin/Blog_Management/Partners_List.html"
+
+    def get(self, request):
+        partners = Partners.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "partners": partners,
+                "breadcrumb": {"child": "Partners List"},
+            },
+        )
+
+class PartnersCreateView(View):
+    def post(self, request):
+        title = request.POST.get('title')
+
+        if not title:
+            messages.error(request, "Partner Title is required.")
+            return redirect('partners_list')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'partners'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'partners/' + image_name
+
+        partners = Partners.objects.create(
+            title=title,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "Partners created successfully.")
+        return redirect('partners_list')
+
+class PartnersEditView(View):
+    template_name = "Admin/Blog_Management/Partners_List.html"
+
+    def post(self, request, partners_id):
+        partners_item = get_object_or_404(Partners, id=partners_id)
+
+        title = request.POST.get('title')
+
+        if not title:
+            messages.error(request, "Partner Title is required.")
+            return redirect('partners_list')
+
+        partners_item.title = title
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'partners'))
+            if partners_item.image and partners_item.image.path:
+                old_image_path = partners_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            partners_item.image = 'partners/' + image_name
+
+        partners_item.save()
+
+        messages.success(request, "Partners updated successfully.")
+        return redirect('partners_list')
+
+class PartnersDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        partners = get_object_or_404(Partners, pk=pk)
+        partners.delete()
+        messages.success(request, "Partners Deleted Successfully.")
+        return redirect("partners_list")
+
+#################################### Global Clients Module ###############################################
+class Global_ClientsListView(LoginRequiredMixin, View):
+    template_name = "Admin/Blog_Management/Global_Clients_List.html"
+
+    def get(self, request):
+        global_clients = Global_Clients.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "global_clients": global_clients,
+                "breadcrumb": {"child": "Global-Clients List"},
+            },
+        )
+
+class Global_ClientsCreateView(View):
+    def post(self, request):
+        title = request.POST.get('title')
+
+        if not title:
+            messages.error(request, "Global Clients Title is required.")
+            return redirect('global_clients_list')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'global_clients'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'global_clients/' + image_name
+
+        global_clients = Global_Clients.objects.create(
+            title=title,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "Global Client created successfully.")
+        return redirect('global_clients_list')
+
+class Global_ClientsEditView(View):
+    template_name = "Admin/Blog_Management/Global_Clients_List.html"
+
+    def post(self, request, global_clients_id):
+        global_clients_item = get_object_or_404(Global_Clients, id=global_clients_id)
+
+        title = request.POST.get('title')
+
+        if not title:
+            messages.error(request, "Global Client Title is required.")
+            return redirect('global_clients_list')
+
+        global_clients_item.title = title
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'global_clients'))
+            if global_clients_item.image and global_clients_item.image.path:
+                old_image_path = global_clients_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            global_clients_item.image = 'global_clients/' + image_name
+
+        global_clients_item.save()
+
+        messages.success(request, "Global Client updated successfully.")
+        return redirect('global_clients_list')
+
+class Global_ClientsDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        global_clients = get_object_or_404(Global_Clients, pk=pk)
+        global_clients.delete()
+        messages.success(request, "Global Client Deleted Successfully.")
+        return redirect("global_clients_list")
+    
+#################################### Tryout Club Module ###############################################
+class Tryout_ClubListView(LoginRequiredMixin, View):
+    template_name = "Admin/Blog_Management/Tryout_Club_List.html"
+
+    def get(self, request):
+        tryout_club = Tryout_Club.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "tryout_club": tryout_club,
+                "breadcrumb": {"child": "Tryout Club List"},
+            },
+        )
+
+class Tryout_ClubCreateView(View):
+    def post(self, request):
+        title = request.POST.get('title')
+
+        if not title:
+            messages.error(request, "Tryout Club Title is required.")
+            return redirect('tryout_club_list')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'tryout_club'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'tryout_club/' + image_name
+
+        tryout_club = Tryout_Club.objects.create(
+            title=title,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "Tryout Club created successfully.")
+        return redirect('tryout_club_list')
+
+class Tryout_ClubEditView(View):
+    template_name = "Admin/Blog_Management/Tryout_Club_List.html"
+
+    def post(self, request, tryout_club_id):
+        tryout_club_item = get_object_or_404(Tryout_Club, id=tryout_club_id)
+
+        title = request.POST.get('title')
+
+        if not title:
+            messages.error(request, "Tryout Club Title is required.")
+            return redirect('tryout_club_list')
+
+        tryout_club_item.title = title
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'tryout_club'))
+            if tryout_club_item.image and tryout_club_item.image.path:
+                old_image_path = tryout_club_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            tryout_club_item.image = 'tryout_club/' + image_name
+
+        tryout_club_item.save()
+
+        messages.success(request, "Tryout Club updated successfully.")
+        return redirect('tryout_club_list')
+
+class Tryout_ClubDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        tryout_club = get_object_or_404(Tryout_Club, pk=pk)
+        tryout_club.delete()
+        messages.success(request, "Tryout Club Deleted Successfully.")
+        return redirect("tryout_club_list")
+    
+
+#################################### Inquires Module ###############################################
+class InquireListView(LoginRequiredMixin, View):
+    template_name = "Admin/Inquire_List.html"
+
+    def get(self, request):
+        inquire = Inquire.objects.all().order_by('-id')
+        print(inquire)
+        return render(
+            request,
+            self.template_name,
+            {
+                "inquire": inquire,
+                "breadcrumb": {"child": "List of Inquires"},
+            },
+        )
+
+
+
+#################################### Testimonial Module ###############################################
+class TestimonialListView(LoginRequiredMixin, View):
+    template_name = "Admin/Blog_Management/Testimonial_List.html"
+
+    def get(self, request):
+        testimonial = Testimonial.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "testimonial": testimonial,
+                "breadcrumb": {"child": "Testimonial List"},
+            },
+        )
+
+class TestimonialCreateView(View):
+    def post(self, request):
+        name = request.POST.get('name')
+        designation = request.POST.get('designation')
+        content = request.POST.get('content')
+        rattings = request.POST.get('rattings')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'testimonial'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'testimonial/' + image_name
+
+        testimonial = Testimonial.objects.create(
+            name=name,
+            designation=designation,
+            content=content,
+            rattings=rattings,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "Tryout Club created successfully.")
+        return redirect('testimonial_list')
+
+class TestimonialEditView(View):
+    template_name = "Admin/Blog_Management/Testimonial_List.html"
+
+    def post(self, request, testimonial_id):
+        testimonial_item = get_object_or_404(Testimonial, id=testimonial_id)
+
+        name = request.POST.get('name')
+        designation = request.POST.get('designation')
+        content = request.POST.get('content')
+        rattings = request.POST.get('rattings')
+
+
+        testimonial_item.name = name
+        testimonial_item.designation = designation
+        testimonial_item.content = content
+        testimonial_item.rattings = rattings
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'testimonial'))
+            if testimonial_item.image and testimonial_item.image.path:
+                old_image_path = testimonial_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            testimonial_item.image = 'testimonial/' + image_name
+
+        testimonial_item.save()
+
+        messages.success(request, "Tryout Club updated successfully.")
+        return redirect('testimonial_list')
+
+class TestimonialDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        testimonial = get_object_or_404(Testimonial, pk=pk)
+        testimonial.delete()
+        messages.success(request, "Tryout Club Deleted Successfully.")
+        return redirect("testimonial_list")
+    
