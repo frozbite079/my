@@ -2,6 +2,61 @@
 <!-- Plugins css start-->
 <link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+
+    .icon-img {
+    width: 24px;  /* Adjust the width */
+    height: 24px; /* Adjust the height */
+    object-fit: contain; /* Keeps the aspect ratio */
+    cursor: pointer; /* Optional: make it clickable */
+    }
+    /* Container for the dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #e6e6e6; /* Purple background */
+    min-width: 100px; /* Set width as needed */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Style the links inside the dropdown */
+.dropdown-content a {
+    color: rgb(0, 0, 0); /* Text color */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #505050; /* Darker purple on hover */
+}
+
+/* Show the dropdown content when the image is clicked */
+.show {
+    display: block;
+}
+
+/* Optional: Style for the icon image */
+.icon-img {
+    cursor: pointer;
+}
+
+
+    
+</style>
+
+
+<!-- Bootstrap JS (for dropdown functionality) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Plugins css Ends--> {% endblock %} {% block title %}Player List{% endblock %} {% block content %} <div class="page-body">
    <div class="container-fluid">
       <div class="page-title">
@@ -20,44 +75,112 @@
                      <table class="display" id="basic-1">
                         <thead>
                            <tr>
-                              <th>Username</th>
-                              <th>First Name</th>
-                              <th>Last Name</th>
-                              <th>Email</th>
-                              <th>Phone</th>
-                              <th>Status</th>
-                              <th>Role</th>
-                              <th>Actions</th>
+                              <th>No.</th>
+                              <th>Name (in english)</th>
+                              <th>Name (in arabic)</th>
+                              <th>Action</th>
                            </tr>
                         </thead>
-                        <tbody> {% for user in users %} <tr>
-                              <td>{{ user.username }}</td>
-                              <td>{{ user.first_name }}</td>
-                              <td>{{ user.last_name }}</td>
-                              <td>{{ user.email }}</td>
-                              <td>{{ user.phone }}</td>
-                              <td> {% if user.is_active %} <button class="btn btn-success toggle-status" data-user-id="{{ user.id }}" data-status="deactivate">Active</button> {% else %} <button class="btn btn-danger toggle-status" data-user-id="{{ user.id }}" data-status="activate">Deactive</button> {% endif %} </td> {% if user.role %} <td>{{ user.role.name }}</td> {% else %} <td>No Role Assigned</td> {% endif %} <td>
-                                 <div class="action-menu-container" style="position: relative; display: inline-block;">
-                                    <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
-                                       <i data-feather="more-vertical"></i>
-                                       <!-- Three dots icon -->
-                                    </a>
-                                    <!-- Hidden card for actions -->
-                                    <div class="action-card" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); z-index: 10; width: 150px;">
-                                       <ul style="list-style: none; padding: 0; margin: 0;">
-                                          <li style="padding: 8px 12px;">
-                                             <a class="edit" href="#" data-bs-toggle="modal" data-bs-target="#editUserModal" data-id="{{ user.id }}">
-                                                <i data-feather="edit"></i> Edit </a>
-                                          </li>
-                                          <li style="padding: 8px 12px; border-top: 1px solid #eee;">
-                                             <a class="delete" href="#" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-id="{{ user.id }}">
-                                                <i data-feather="trash-2"></i> Delete </a>
-                                          </li>
-                                       </ul>
+                        <tbody> <tr>
+                              <td>1.</td>
+                              <td>Home</td>
+                              <td>الصفحة الرئيسية</td>
+                              <td>
+                                <div class="dropdown">
+                                    <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img" alt="Menu" onclick="toggleDropdown()"/>
+                                    <div class="dropdown-content">
+                                        <a href="#" id="editLink">Edit</a>
                                     </div>
-                                 </div>
-                              </td>
-                           </tr> {% endfor %} </tbody>
+                                </div>
+                            </td>
+                           </tr> 
+
+                           <tr>
+                            <td>2.</td>
+                            <td>Discovery</td>
+                            <td>اكتشاف</td>
+                            <td>
+                                <div class="dropdown">
+                                    <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img" alt="Menu" onclick="toggleDropdown()"/>
+                                    <div class="dropdown-content">
+                                        <a href="#" id="editLink">Edit</a>
+                                    </div>
+                                </div>
+                            </td>
+                         </tr> 
+
+                         <tr>
+                            <td>3.</td>
+                            <td>Success Story</td>
+                            <td>قصة نجاح</td>
+                            <td>
+                                <div class="dropdown">
+                                    <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img" alt="Menu" onclick="toggleDropdown()"/>
+                                    <div class="dropdown-content">
+                                        <a href="#" id="editLink">Edit</a>
+                                    </div>
+                                </div>
+                            </td>
+                         </tr>
+                         
+                         <tr>
+                            <td>4.</td>
+                            <td>News</td>
+                            <td>أخبار</td>
+                            <td>
+                              <div class="dropdown">
+                                  <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img"/>
+                              </div>
+                          </td>
+                         </tr> 
+
+                         <tr>
+                            <td>5.</td>
+                            <td>Advertise</td>
+                            <td>أعلن</td>
+                            <td>
+                              <div class="dropdown">
+                                  <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img"/>
+                              </div>
+                          </td>
+                         </tr> 
+
+                         <tr>
+                            <td>6.</td>
+                            <td>Contact Us</td>
+                            <td>اتصل بنا</td>
+                            <td>
+                              <div class="dropdown">
+                                  <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img"/>
+                              </div>
+                          </td>
+                         </tr> 
+
+                         <tr>
+                            <td>7.</td>
+                            <td>Privacy Policy</td>
+                            <td>سياسة الخصوصية
+                            </td>
+                            <td>
+                              <div class="dropdown">
+                                  <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img"/>
+                              </div>
+                          </td>
+                         </tr> 
+
+                         <tr>
+                            <td>8.</td>
+                            <td>Terms of Use</td>
+                            <td>شروط الاستخدام
+                            </td>
+                            <td>
+                              <div class="dropdown">
+                                  <img src="{% static 'assets/icons/menu_page.png' %}" class="icon-img"/>
+                              </div>
+                          </td>
+                         </tr> 
+                        
+                        </tbody>
                      </table>
                   </div>
                </div>
@@ -258,7 +381,33 @@
             });
          }
       });
+      function toggleDropdown(event) {
+        event.stopPropagation(); // Prevents the click event from bubbling up
+        var dropdown = event.target.nextElementSibling;
+        if (dropdown) {
+            dropdown.classList.toggle('show');
+        }
+    }
+
+    // Attach the toggleDropdown function to each icon-img
+    document.querySelectorAll('.icon-img').forEach(function(icon) {
+        icon.addEventListener('click', toggleDropdown);
+    });
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.icon-img')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
    });
 
-   
+
+
 </script> {% endblock %}

@@ -1012,3 +1012,9 @@ class EventTypeListView(LoginRequiredMixin, View):
                 "breadcrumb": {"parent": "General Settings", "child": "Event Types"},
             },
         )
+        
+class CMSPages(LoginRequiredMixin, View):
+    template_name = "Admin/cmspages.html"
+
+    def get(self,request):
+        return render(request, self.template_name)

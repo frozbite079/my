@@ -41,6 +41,7 @@ urlpatterns = [
     path('users/<int:pk>/delete/', UserDeleteView.as_view(), name='user_delete'),
     path('user/<int:pk>/toggle-status/', ToggleUserStatusView.as_view(), name='user_toggle_status'),
 
+
     #User Profile
     path('user_profile/',UserProfileView.as_view(),name='user_profile'),
     path('edit_profile/', UserUpdateProfileView.as_view(), name='edit_profile'),
@@ -90,6 +91,10 @@ urlpatterns = [
     path('eventtype/create/', EventTypeCreateView.as_view(), name='eventtype_create'),
     path('eventtype/update/<int:pk>/', EventTypeUpdateView.as_view(), name='eventtype_update'),
     path('eventtype/delete/<int:pk>/', EventTypeDeleteView.as_view(), name='eventtype_delete'),
+    
+    
+    path('cmspages/',CMSPages.as_view(),name = "cmspages_urls"),
+    
 
 ]
 
