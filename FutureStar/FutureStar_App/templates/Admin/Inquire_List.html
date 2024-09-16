@@ -97,41 +97,41 @@
 </div>
 <!-- View Inquire Modal -->
 <div class="modal fade bd-example-modal-lg" id="viewInquireModal" tabindex="-1" aria-labelledby="viewInquireModalLabel" aria-hidden="true">
-   <div class="modal-dialog modal-lg">
-       <div class="modal-content shadow-lg border-0 rounded">
-           <div class="modal-header bg-primary text-white">
-               <h5 class="modal-title" id="viewInquireModalLabel">Inquire Details</h5>
-               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-           </div>
-           <div class="modal-body p-4">
-               <div class="row">
-                   <div class="col-md-6 mb-3">
-                       <label for="inquireFullName" class="form-label fw-bold">Full Name</label>
-                       <p class="border rounded p-2" id="inquireFullName"></p>
-                   </div>
-                   <div class="col-md-6 mb-3">
-                       <label for="inquirePhone" class="form-label fw-bold">Phone</label>
-                       <p class="border rounded p-2" id="inquirePhone"></p>
-                   </div>
-               </div>
-               <div class="row">
-                   <div class="col-md-6 mb-3">
-                       <label for="inquireEmail" class="form-label fw-bold">Email</label>
-                       <p class="border rounded p-2" id="inquireEmail"></p>
-                   </div>
-                   <div class="col-md-12 mb-3">
-                       <label for="inquireMessage" class="form-label fw-bold">Message</label>
-                       <textarea class="form-control" id="inquireMessage" rows="6" readonly></textarea>
-                   </div>
-               </div>
-           </div>
-           <div class="modal-footer justify-content-between">
-               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-           </div>
-       </div>
-   </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content shadow-lg border-0 rounded">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="viewInquireModalLabel">Inquire Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Full Name:</label>
+                        <span id="inquireFullName"></span> <!-- Example name -->
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Phone:</label>
+                        <span id="inquirePhone"></span> <!-- Example phone -->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Email:</label>
+                        <span id="inquireEmail"></span> <!-- Example email -->
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold">Message:</label>
+                        <span id="inquireMessage" style="display: block; word-wrap: break-word; word-break: break-word;">
+                        </span> <!-- Example long message -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-
 
 <script>
    document.addEventListener('DOMContentLoaded', function () {

@@ -1023,7 +1023,7 @@ class CMSPages(LoginRequiredMixin, View):
 
 #################################### News Module ###############################################
 class NewsListView(LoginRequiredMixin, View):
-    template_name = "Admin/Blog_Management/News_List.html"
+    template_name = "Admin/News_List.html"
 
     def get(self, request):
         news = News.objects.all()
@@ -1063,7 +1063,7 @@ class NewsCreateView(View):
         return redirect('news_list')
 
 class NewsEditView(View):
-    template_name = "Admin/Blog_Management/News_List.html"
+    template_name = "Admin/News_List.html"
 
     def post(self, request, news_id):
         news_item = get_object_or_404(News, id=news_id)
@@ -1105,7 +1105,7 @@ class NewsDeleteView(LoginRequiredMixin, View):
 
 #################################### Partners Module ###############################################
 class PartnersListView(LoginRequiredMixin, View):
-    template_name = "Admin/Blog_Management/Partners_List.html"
+    template_name = "Admin/General_Settings/Partners_List.html"
 
     def get(self, request):
         partners = Partners.objects.all()
@@ -1143,7 +1143,7 @@ class PartnersCreateView(View):
         return redirect('partners_list')
 
 class PartnersEditView(View):
-    template_name = "Admin/Blog_Management/Partners_List.html"
+    template_name = "Admin/General_Settings/Partners_List.html"
 
     def post(self, request, partners_id):
         partners_item = get_object_or_404(Partners, id=partners_id)
@@ -1179,7 +1179,7 @@ class PartnersDeleteView(LoginRequiredMixin, View):
 
 #################################### Global Clients Module ###############################################
 class Global_ClientsListView(LoginRequiredMixin, View):
-    template_name = "Admin/Blog_Management/Global_Clients_List.html"
+    template_name = "Admin/General_Settings/Global_Clients_List.html"
 
     def get(self, request):
         global_clients = Global_Clients.objects.all()
@@ -1217,7 +1217,7 @@ class Global_ClientsCreateView(View):
         return redirect('global_clients_list')
 
 class Global_ClientsEditView(View):
-    template_name = "Admin/Blog_Management/Global_Clients_List.html"
+    template_name = "Admin/General_Settings/Global_Clients_List.html"
 
     def post(self, request, global_clients_id):
         global_clients_item = get_object_or_404(Global_Clients, id=global_clients_id)
@@ -1253,7 +1253,7 @@ class Global_ClientsDeleteView(LoginRequiredMixin, View):
     
 #################################### Tryout Club Module ###############################################
 class Tryout_ClubListView(LoginRequiredMixin, View):
-    template_name = "Admin/Blog_Management/Tryout_Club_List.html"
+    template_name = "Admin/General_Settings/Tryout_Club_List.html"
 
     def get(self, request):
         tryout_club = Tryout_Club.objects.all()
@@ -1291,7 +1291,7 @@ class Tryout_ClubCreateView(View):
         return redirect('tryout_club_list')
 
 class Tryout_ClubEditView(View):
-    template_name = "Admin/Blog_Management/Tryout_Club_List.html"
+    template_name = "Admin/General_Settings/Tryout_Club_List.html"
 
     def post(self, request, tryout_club_id):
         tryout_club_item = get_object_or_404(Tryout_Club, id=tryout_club_id)
@@ -1346,7 +1346,7 @@ class InquireListView(LoginRequiredMixin, View):
 
 #################################### Testimonial Module ###############################################
 class TestimonialListView(LoginRequiredMixin, View):
-    template_name = "Admin/Blog_Management/Testimonial_List.html"
+    template_name = "Admin/General_Settings/Testimonial_List.html"
 
     def get(self, request):
         testimonial = Testimonial.objects.all()
@@ -1386,7 +1386,7 @@ class TestimonialCreateView(View):
         return redirect('testimonial_list')
 
 class TestimonialEditView(View):
-    template_name = "Admin/Blog_Management/Testimonial_List.html"
+    template_name = "Admin/General_Settings/Testimonial_List.html"
 
     def post(self, request, testimonial_id):
         testimonial_item = get_object_or_404(Testimonial, id=testimonial_id)
