@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% load static %}
+{% load sass_tags %}
+
+{% block css %}
+<!-- Plugins css start-->
+<link rel="stylesheet" type="text/css" href="{% sass_src 'assets/scss/vendors/datatables.scss' %}">
+<!-- Plugins css Ends-->
+{% endblock %}
+<style>
+   .is-invalid {
+   border-color: #dc3545;
+   background-color: #f8d7da;
+}
+
+</style>
+{% block title %}
+App Feature List
+{% endblock %}
+
+{% block content %}
+<div class="page-body">
+   <div class="container-fluid">
+      <div class="page-title">
+         <div class="row">
+            <div class="col-6">
+               <h3>{{breadcrumb.child}}</h3>
+            </div>
+            <div class="col-6">
+               <ol class="breadcrumb">
+                  <button class="btn btn-pill btn-outline-primary-2x ml-auto" data-bs-toggle="modal" data-bs-target="#addApp_FeatureModal">Add App Feature</button>
+               </ol>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <!-- App_Feature List -->
+         <div class="col-sm-12">
+            <div class="card">
+               <div class="card-body">
+                  <div class="table-responsive">
+                     <table class="display" id="basic-1">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th> <!-- New column for the image -->
+                                <th>Title</th>
+                                <th>Sub_Title</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app_feature_item in app_feature %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    {% if app_feature_item.image %}
+                                        <img src="{{ app_feature_item.image.url }}" alt="{{ app_feature_item.title }}" width="100" height="auto">
+                                    {% else %}
+                                        No Image
+                                    {% endif %}
+                                </td>                                
+                                <td>{{ app_feature_item.title }}</td>
+                                <td>{{ app_feature_item.sub_title }}</td>
+                                <td>
+                                    <!-- Action buttons -->
+                                    <div class="action-menu-container" style="position: relative; display: inline-block;">
+                                        <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
+                                            <i data-feather="more-vertical"></i>
+                                        </a>
+                                        <div class="action-card" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); z-index: 10; width: 150px;">
+                                          <ul style="list-style: none; padding: 0; margin: 0;">
+                                             <li style="padding: 8px 12px;">
+                                                <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#editApp_FeatureModal"  data-app_feature-id="{{ app_feature_item.id }}" 
+                                                data-app_feature-title="{{ app_feature_item.title }}" 
+                                                data-app_feature-sub_title="{{ app_feature_item.sub_title }}" 
+                                                data-app_feature-image="{{ app_feature_item.image.url }}">
+                                                   <i data-feather="edit"></i> Edit </a>
+                                             </li>
+                                             <li style="padding: 8px 12px; border-top: 1px solid #eee;">
+                                                <a style="font-size: large;" href="#" data-bs-toggle="modal" data-bs-target="#deleteApp_FeatureModal" data-app_feature-id="{{ app_feature_item.id }}">
+                                                   <i data-feather="trash-2"></i> Delete </a>
+                                             </li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>                        
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Add App_Feature Modal -->
+<div class="modal fade" id="addApp_FeatureModal" tabindex="-1" aria-labelledby="addApp_FeatureModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="addApp_FeatureModalLabel">Add App Feature</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="{% url 'app_feature_create' %}" id="addApp_FeatureForm" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="mb-3">
+                  <label for="title" class="form-label">Enter App Feature Title</label>
+                  <input type="text" class="form-control" id="title" name="title" placeholder="Enter App Feature Title">
+                  <div class="invalid-feedback" id="title-error"></div> <!-- Error message container -->
+               </div>
+               <div class="mb-3">
+                  <label for="sub_title" class="form-label">Sub Title</label>
+                  <input type="text" class="form-control" id="sub_title" name="sub_title" placeholder="Enter App Feature Sub Title">
+                  <div class="invalid-feedback" id="sub_title-error"></div> <!-- Error message container -->
+               </div>
+               <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input type="file" class="form-control" id="image" name="image">
+                    <div class="invalid-feedback" id="image-error"></div> <!-- Error message container -->
+                </div>
+               <button type="submit" class="btn btn-primary">Add App Feature</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Edit App_Feature Modal -->
+<div class="modal fade" id="editApp_FeatureModal" tabindex="-1" aria-labelledby="editApp_FeatureModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="editApp_FeatureModalLabel">Edit App Feature</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" id="editApp_FeatureForm" enctype="multipart/form-data">
+               {% csrf_token %}
+               <input type="hidden" id="editApp_FeatureId" name="id">
+               <div class="mb-3">
+                  <label for="editTitle" class="form-label">Title</label>
+                  <input type="text" class="form-control" id="editTitle" name="title" placeholder="Enter App Feature Title">
+                  <div class="invalid-feedback" id="edit-title-error"></div> <!-- Error message container -->
+               </div>
+               <div class="mb-3">
+                  <label for="editSub_Title" class="form-label">Sub Title</label>
+                  <input type="text" class="form-control" id="editSub_Title" name="sub_title" placeholder="Enter App Feature Sub Title">
+                  <div class="invalid-feedback" id="edit-sub_title-error"></div> <!-- Error message container -->
+               </div>
+               <div class="mb-3">
+                  <label for="editImage" class="form-label">Image</label>
+                  <input type="file" class="form-control" id="editImage" name="image">
+                  <img id="editApp_FeatureImagePreview" style="width: 100px; margin-top: 10px;">
+               </div>
+               <button type="submit" class="btn btn-primary">Update App Feature</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+<!-- Delete App_Feature Modal -->
+<div class="modal fade" id="deleteApp_FeatureModal" tabindex="-1" aria-labelledby="deleteApp_FeatureModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title" id="deleteApp_FeatureModalLabel">Delete App Feature</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form method="post" action="" id="deleteApp_FeatureForm">
+               {% csrf_token %}
+               <input type="hidden" id="deleteApp_FeatureId" title="id">
+               <p>Are you sure you want to delete this app_feature?</p>
+               <button type="submit" class="btn btn-danger">Delete App Feature</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'assets/js/datatable/datatables/jquery.dataTables.min.js'%}"></script>
+<script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
+<script src="{% static 'assets/js/tooltip-init.js'%}"></script>
+<!-- Plugins JS Ends-->
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+    // Edit App_Feature Modal
+    var editApp_FeatureModal = document.getElementById('editApp_FeatureModal');
+    if (editApp_FeatureModal) {
+        editApp_FeatureModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var app_featureId = button.getAttribute('data-app_feature-id');
+            var app_featureTitle = button.getAttribute('data-app_feature-title');
+            var app_featureSub_Title = button.getAttribute('data-app_feature-sub_title');
+            var app_featureImageUrl = button.getAttribute('data-app_feature-image');
+
+            var form = document.getElementById('editApp_FeatureForm');
+            form.action = "{% url 'app_feature_edit' 0 %}".replace('0', app_featureId);
+
+            form.querySelector('#editApp_FeatureId').value = app_featureId;
+            form.querySelector('#editTitle').value = app_featureTitle;
+            form.querySelector('#editSub_Title').value = app_featureSub_Title;
+
+            var imagePreview = document.getElementById('editApp_FeatureImagePreview');
+            if (app_featureImageUrl) {
+                imagePreview.src = app_featureImageUrl;
+                imagePreview.style.display = 'block';
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+    }
+
+    // Delete App_Feature Modal
+    var deleteApp_FeatureModal = document.getElementById('deleteApp_FeatureModal');
+    if (deleteApp_FeatureModal) {
+        deleteApp_FeatureModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var app_featureId = button.getAttribute('data-app_feature-id');
+            var deleteForm = document.getElementById('deleteApp_FeatureForm');
+            deleteForm.action = "{% url 'app_feature_delete' 0 %}".replace('0', app_featureId);
+        });
+    }
+
+    // Function to validate forms
+    function validateForm(form) {
+        var isValid = true;
+
+        // Validation for title
+        var titleInput = form.querySelector('input[name="title"]');
+        var titleError = form.querySelector('#' + (form.id === 'addApp_FeatureForm' ? 'title-error' : 'edit-title-error'));
+        if (!titleInput.value.trim()) {
+            titleInput.classList.add('is-invalid');
+            titleError.textContent = 'This field is required.';
+            isValid = false;
+        } else {
+            titleInput.classList.remove('is-invalid');
+            titleError.textContent = '';
+        }
+
+        // Validation for sub_title
+        var subTitleInput = form.querySelector('input[name="sub_title"]');
+        var subTitleError = form.querySelector('#' + (form.id === 'addApp_FeatureForm' ? 'sub_title-error' : 'edit-sub_title-error'));
+        if (!subTitleInput.value.trim()) {
+            subTitleInput.classList.add('is-invalid');
+            subTitleError.textContent = 'This field is required.';
+            isValid = false;
+        } else {
+            subTitleInput.classList.remove('is-invalid');
+            subTitleError.textContent = '';
+        }
+
+        // Image validation for Add form only
+        if (form.id === 'addApp_FeatureForm') {
+            var imageInput = form.querySelector('input[name="image"]');
+            var imageError = form.querySelector('#image-error');
+            if (imageInput.files.length === 0) {
+                imageInput.classList.add('is-invalid');
+                imageError.textContent = 'An image is required.';
+                isValid = false;
+            } else {
+                imageInput.classList.remove('is-invalid');
+                imageError.textContent = '';
+            }
+        }
+
+        return isValid;
+    }
+
+    // Add form validation on submit
+    var addApp_FeatureForm = document.getElementById('addApp_FeatureForm');
+    if (addApp_FeatureForm) {
+        addApp_FeatureForm.addEventListener('submit', function (event) {
+            if (!validateForm(addApp_FeatureForm)) {
+                event.preventDefault();
+            }
+        });
+    }
+
+    // Edit form validation on submit
+    var editApp_FeatureForm = document.getElementById('editApp_FeatureForm');
+    if (editApp_FeatureForm) {
+        editApp_FeatureForm.addEventListener('submit', function (event) {
+            if (!validateForm(editApp_FeatureForm)) {
+                event.preventDefault();
+            }
+        });
+    }
+
+    // Toggle the visibility of the action card
+    document.querySelectorAll('.three-dots-menu').forEach(function (menu) {
+        menu.addEventListener('click', function (event) {
+            event.preventDefault();
+            var actionCard = menu.nextElementSibling;
+            actionCard.style.display = (actionCard.style.display === 'none' || actionCard.style.display === '') ? 'block' : 'none';
+
+            // Close other open action cards
+            document.querySelectorAll('.action-card').forEach(function (card) {
+                if (card !== actionCard) {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Hide action card if clicking outside
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.action-menu-container')) {
+            document.querySelectorAll('.action-card').forEach(function (card) {
+                card.style.display = 'none';
+            });
+        }
+    });
+});
+
+</script>
+
+{% endblock %}

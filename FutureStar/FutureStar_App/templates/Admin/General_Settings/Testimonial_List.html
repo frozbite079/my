@@ -66,8 +66,33 @@ Testimonial Management
                                  <td>{{ testimonial_item.name }}</td>
                                  <td>{{ testimonial_item.designation }}</td>
                                  <td>{{ testimonial_item.content }}</td>
-                                 <td>{{ testimonial_item.rattings }}</td>
-                                 <td>
+                                 <style>
+                                    .star-rating {
+                                        display: inline-block;
+                                        font-size: 20px;
+                                        color: lightgray;
+                                        position: relative;
+                                    }
+                                    .star-rating .filled-stars {
+                                        color: gold;
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        width: 0%;
+                                    }
+                                </style>
+                                
+                                
+                                <td>
+                                 <div class="star-rating" data-rating="{{ testimonial_item.rattings }}">
+                                     <div class="filled-stars">★★★★★</div>
+                                     ★★★★★
+                                 </div>
+                             </td>
+                                                                                          
+                                <td>
                                      <!-- Action buttons -->
                                      <div class="action-menu-container" style="position: relative; display: inline-block;">
                                          <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
@@ -139,9 +164,21 @@ Testimonial Management
                </div>
                <div class="mb-3">
                   <label for="rattings" class="form-label">Rattings</label>
-                  <input type="text" class="form-control" id="rattings" name="rattings" placeholder="Enter Rattings">
+                  <select class="form-control" id="rattings" name="rattings">
+                     <option value="">Select Rattings</option>
+                     <option value="0.5">0.5</option>
+                     <option value="1.0">1.0</option>
+                     <option value="1.5">1.5</option>
+                     <option value="2.0">2.0</option>
+                     <option value="2.5">2.5</option>
+                     <option value="3.0">3.0</option>
+                     <option value="3.5">3.5</option>
+                     <option value="4.0">4.0</option>
+                     <option value="4.5">4.5</option>
+                     <option value="5.0">5.0</option>
+                  </select>
                   <div class="invalid-feedback" id="rattings-error"></div>
-               </div>
+               </div>               
                <button type="submit" class="btn btn-primary">Add Testimonial</button>
             </form>
          </div>
@@ -178,9 +215,21 @@ Testimonial Management
                </div>
                <div class="mb-3">
                   <label for="editRattings" class="form-label">Rattings</label>
-                  <input type="text" class="form-control" id="editRattings" name="rattings">
+                  <select class="form-control" id="editRattings" name="rattings">
+                     <option value="">Select Rattings</option>
+                     <option value="0.5">0.5</option>
+                     <option value="1.0">1.0</option>
+                     <option value="1.5">1.5</option>
+                     <option value="2.0">2.0</option>
+                     <option value="2.5">2.5</option>
+                     <option value="3.0">3.0</option>
+                     <option value="3.5">3.5</option>
+                     <option value="4.0">4.0</option>
+                     <option value="4.5">4.5</option>
+                     <option value="5.0">5.0</option>
+                  </select>
                   <div class="invalid-feedback" id="edit-rattings-error"></div>
-               </div>
+               </div>               
                <div class="mb-3">
                   <label for="editImage" class="form-label">Image</label>
                   <input type="file" class="form-control" id="editImage" name="image">
@@ -201,161 +250,169 @@ Testimonial Management
 <script src="{% static 'assets/js/datatable/datatables/datatable.custom.js'%}"></script>
 <script src="{% static 'assets/js/tooltip-init.js'%}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+   document.addEventListener('DOMContentLoaded', function() {
        // Edit Testimonial Modal
        var editTestimonialModal = document.getElementById('editTestimonialModal');
        if (editTestimonialModal) {
-          editTestimonialModal.addEventListener('show.bs.modal', function(event) {
-             var button = event.relatedTarget;
-             var testimonialId = button.getAttribute('data-testimonial-id');
-             var name = button.getAttribute('data-testimonial-name');
-             var designation = button.getAttribute('data-testimonial-designation');
-             var content = button.getAttribute('data-testimonial-content');
-             var rattings = button.getAttribute('data-testimonial-rattings');
-             var imageUrl = button.getAttribute('data-testimonial-image');
- 
-             var form = document.getElementById('editTestimonialForm');
-             form.action = "{% url 'testimonial_edit' 0 %}".replace('0', testimonialId);
- 
-             form.querySelector('#editTestimonialId').value = testimonialId;
-             form.querySelector('#editName').value = name;
-             form.querySelector('#editDesignation').value = designation;
-             form.querySelector('#editContent').value = content;
-             form.querySelector('#editRattings').value = rattings;
- 
-             var imagePreview = document.getElementById('editTestimonialImagePreview');
-             if (imageUrl) {
-                imagePreview.src = imageUrl;
-                imagePreview.style.display = 'block';
-             } else {
-                imagePreview.style.display = 'none';
-             }
-          });
+           editTestimonialModal.addEventListener('show.bs.modal', function(event) {
+               var button = event.relatedTarget;
+               var testimonialId = button.getAttribute('data-testimonial-id');
+               var name = button.getAttribute('data-testimonial-name');
+               var designation = button.getAttribute('data-testimonial-designation');
+               var content = button.getAttribute('data-testimonial-content');
+               var rattings = button.getAttribute('data-testimonial-rattings');
+               var imageUrl = button.getAttribute('data-testimonial-image');
+   
+               var form = document.getElementById('editTestimonialForm');
+               form.action = "{% url 'testimonial_edit' 0 %}".replace('0', testimonialId);
+   
+               form.querySelector('#editTestimonialId').value = testimonialId;
+               form.querySelector('#editName').value = name;
+               form.querySelector('#editDesignation').value = designation;
+               form.querySelector('#editContent').value = content;
+               form.querySelector('#editRattings').value = rattings;
+   
+               var imagePreview = document.getElementById('editTestimonialImagePreview');
+               if (imageUrl) {
+                   imagePreview.src = imageUrl;
+                   imagePreview.style.display = 'block';
+               } else {
+                   imagePreview.style.display = 'none';
+               }
+           });
        }
- 
+   
        // Delete Testimonial Modal
        var deleteTestimonialModal = document.getElementById('deleteTestimonialModal');
        if (deleteTestimonialModal) {
-          deleteTestimonialModal.addEventListener('show.bs.modal', function(event) {
-             var button = event.relatedTarget;
-             var testimonialId = button.getAttribute('data-testimonial-id');
-             var deleteForm = document.getElementById('deleteTestimonialForm');
-             deleteForm.action = "{% url 'testimonial_delete' 0 %}".replace('0', testimonialId);
-          });
+           deleteTestimonialModal.addEventListener('show.bs.modal', function(event) {
+               var button = event.relatedTarget;
+               var testimonialId = button.getAttribute('data-testimonial-id');
+               var deleteForm = document.getElementById('deleteTestimonialForm');
+               deleteForm.action = "{% url 'testimonial_delete' 0 %}".replace('0', testimonialId);
+           });
        }
- 
-        // Form validation for Add and Edit modals
-        function validateForm(form) {
-            var name = form.querySelector('input[name="name"]');
-            var designation = form.querySelector('input[name="designation"]');
-            var content = form.querySelector('textarea[name="content"]');
-            var rattings = form.querySelector('input[name="rattings"]');
-            var image = form.querySelector('input[name="image"]');
-            var isValid = true;
-
-            // Name validation
-            if (name.value.trim() === '') {
-                name.classList.add('is-invalid');
-                var nameErrorId = form.id === 'addTestimonialForm' ? 'name-error' : 'edit-name-error';
-                document.getElementById(nameErrorId).textContent = 'This field is required.';
-                isValid = false;
-            } else {
-                name.classList.remove('is-invalid');
-                var nameErrorId = form.id === 'addTestimonialForm' ? 'name-error' : 'edit-name-error';
-                document.getElementById(nameErrorId).textContent = '';
-            }
-
-            // Designation validation
-            if (designation.value.trim() === '') {
-                designation.classList.add('is-invalid');
-                var designationErrorId = form.id === 'addTestimonialForm' ? 'designation-error' : 'edit-designation-error';
-                document.getElementById(designationErrorId).textContent = 'This field is required.';
-                isValid = false;
-            } else {
-                designation.classList.remove('is-invalid');
-                var designationErrorId = form.id === 'addTestimonialForm' ? 'designation-error' : 'edit-designation-error';
-                document.getElementById(designationErrorId).textContent = '';
-            }
-
-            // Content validation
-            if (content.value.trim() === '') {
-                content.classList.add('is-invalid');
-                var contentErrorId = form.id === 'addTestimonialForm' ? 'content-error' : 'edit-content-error';
-                document.getElementById(contentErrorId).textContent = 'This field is required.';
-                isValid = false;
-            } else {
-                content.classList.remove('is-invalid');
-                var contentErrorId = form.id === 'addTestimonialForm' ? 'content-error' : 'edit-content-error';
-                document.getElementById(contentErrorId).textContent = '';
-            }
-
-            // Ratings validation (optional: you can adjust this to ensure a specific range)
-            if (rattings.value.trim() === '') {
-                rattings.classList.add('is-invalid');
-                var rattingsErrorId = form.id === 'addTestimonialForm' ? 'rattings-error' : 'edit-rattings-error';
-                document.getElementById(rattingsErrorId).textContent = 'This field is required.';
-                isValid = false;
-            } else {
-                rattings.classList.remove('is-invalid');
-                var rattingsErrorId = form.id === 'addTestimonialForm' ? 'rattings-error' : 'edit-rattings-error';
-                document.getElementById(rattingsErrorId).textContent = '';
-            }
-
-            // Image validation (only for Add)
-            if (form.id === 'addTestimonialForm' && image.files.length === 0) {
-                image.classList.add('is-invalid');
-                document.getElementById('image-error').textContent = 'An image is required.';
-                isValid = false;
-            } else {
-                image.classList.remove('is-invalid');
-                document.getElementById('image-error').textContent = '';
-            }
-
-            return isValid;
-        }
-
- 
+   
+       // Form validation for Add and Edit modals
+       function validateForm(form) {
+           var name = form.querySelector('input[name="name"]');
+           var designation = form.querySelector('input[name="designation"]');
+           var content = form.querySelector('textarea[name="content"]');
+           var rattings = form.querySelector('select[name="rattings"]');
+           var image = form.querySelector('input[name="image"]');
+           var isValid = true;
+   
+           // Name validation
+           if (name.value.trim() === '') {
+               name.classList.add('is-invalid');
+               var nameErrorId = form.id === 'addTestimonialForm' ? 'name-error' : 'edit-name-error';
+               document.getElementById(nameErrorId).textContent = 'This field is required.';
+               isValid = false;
+           } else {
+               name.classList.remove('is-invalid');
+               var nameErrorId = form.id === 'addTestimonialForm' ? 'name-error' : 'edit-name-error';
+               document.getElementById(nameErrorId).textContent = '';
+           }
+   
+           // Designation validation
+           if (designation.value.trim() === '') {
+               designation.classList.add('is-invalid');
+               var designationErrorId = form.id === 'addTestimonialForm' ? 'designation-error' : 'edit-designation-error';
+               document.getElementById(designationErrorId).textContent = 'This field is required.';
+               isValid = false;
+           } else {
+               designation.classList.remove('is-invalid');
+               var designationErrorId = form.id === 'addTestimonialForm' ? 'designation-error' : 'edit-designation-error';
+               document.getElementById(designationErrorId).textContent = '';
+           }
+   
+           // Content validation
+           if (content.value.trim() === '') {
+               content.classList.add('is-invalid');
+               var contentErrorId = form.id === 'addTestimonialForm' ? 'content-error' : 'edit-content-error';
+               document.getElementById(contentErrorId).textContent = 'This field is required.';
+               isValid = false;
+           } else {
+               content.classList.remove('is-invalid');
+               var contentErrorId = form.id === 'addTestimonialForm' ? 'content-error' : 'edit-content-error';
+               document.getElementById(contentErrorId).textContent = '';
+           }
+   
+           // Ratings validation
+           var rattingsValue = parseFloat(rattings.value);
+           if (isNaN(rattingsValue) || rattingsValue < 0.5 || rattingsValue > 5) {
+               rattings.classList.add('is-invalid');
+               var rattingsErrorId = form.id === 'addTestimonialForm' ? 'rattings-error' : 'edit-rattings-error';
+               document.getElementById(rattingsErrorId).textContent = 'Please select a valid rating.';
+               isValid = false;
+           } else {
+               rattings.classList.remove('is-invalid');
+               var rattingsErrorId = form.id === 'addTestimonialForm' ? 'rattings-error' : 'edit-rattings-error';
+               document.getElementById(rattingsErrorId).textContent = '';
+           }
+   
+           // Image validation (only for Add)
+           if (form.id === 'addTestimonialForm' && image.files.length === 0) {
+               image.classList.add('is-invalid');
+               document.getElementById('image-error').textContent = 'An image is required.';
+               isValid = false;
+           } else {
+               image.classList.remove('is-invalid');
+               document.getElementById('image-error').textContent = '';
+           }
+   
+           return isValid;
+       }
+   
        document.getElementById('addTestimonialForm').addEventListener('submit', function(event) {
-          var form = event.target;
-          if (!validateForm(form)) {
-             event.preventDefault(); // Prevent form submission
-          }
+           var form = event.target;
+           if (!validateForm(form)) {
+               event.preventDefault(); // Prevent form submission
+           }
        });
- 
+   
        document.getElementById('editTestimonialForm').addEventListener('submit', function(event) {
-          var form = event.target;
-          if (!validateForm(form)) {
-             event.preventDefault(); // Prevent form submission
-          }
+           var form = event.target;
+           if (!validateForm(form)) {
+               event.preventDefault(); // Prevent form submission
+           }
        });
- 
+   
        // Toggle visibility of the action card
        document.querySelectorAll('.three-dots-menu').forEach(function(menu) {
-          menu.addEventListener('click', function(event) {
-             event.preventDefault();
-             var actionCard = menu.nextElementSibling;
-             actionCard.style.display = (actionCard.style.display === 'none' || actionCard.style.display === '') ? 'block' : 'none';
- 
-             // Close other open action cards
-             document.querySelectorAll('.action-card').forEach(function(card) {
-                if (card !== actionCard) {
-                   card.style.display = 'none';
-                }
-             });
-          });
+           menu.addEventListener('click', function(event) {
+               event.preventDefault();
+               var actionCard = menu.nextElementSibling;
+               actionCard.style.display = (actionCard.style.display === 'none' || actionCard.style.display === '') ? 'block' : 'none';
+   
+               // Close other open action cards
+               document.querySelectorAll('.action-card').forEach(function(card) {
+                   if (card !== actionCard) {
+                       card.style.display = 'none';
+                   }
+               });
+           });
        });
- 
+   
        // Hide action card when clicking outside
        document.addEventListener('click', function(event) {
-          var isClickInside = event.target.closest('.action-menu-container');
-          if (!isClickInside) {
-             document.querySelectorAll('.action-card').forEach(function(card) {
-                card.style.display = 'none';
-             });
-          }
+           var isClickInside = event.target.closest('.action-menu-container');
+           if (!isClickInside) {
+               document.querySelectorAll('.action-card').forEach(function(card) {
+                   card.style.display = 'none';
+               });
+           }
        });
-    });
- </script>
- 
- 
+   
+       // Initialize star ratings
+       const starRatings = document.querySelectorAll('.star-rating');
+       starRatings.forEach(function(starRating) {
+           const rating = parseFloat(starRating.getAttribute('data-rating'));
+           const widthPercentage = (rating / 5) * 100;
+           starRating.querySelector('.filled-stars').style.width = widthPercentage + '%';
+       });
+   });
+   </script>
+   
+
 {% endblock %}

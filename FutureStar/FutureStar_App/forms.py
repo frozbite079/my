@@ -94,6 +94,16 @@ class FieldCapacityForm(forms.ModelForm):
         }
 
 
+# Slider Content Form
+class Slider_ContentForm(forms.ModelForm):
+    class Meta:
+        model = Slider_Content
+        fields = ["content"]
+        widgets = {
+            "content": forms.TextInput(attrs={"placeholder": "Enter content"}),
+        }
+
+
 # Ground Material Form
 class GroundMaterialForm(forms.ModelForm):
     class Meta:

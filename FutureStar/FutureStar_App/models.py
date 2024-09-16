@@ -245,7 +245,7 @@ class Global_Clients(models.Model):
 # Tryout Club Blog Management    
 class Tryout_Club(models.Model):
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='tryout_club/', blank=True, null=True)
+    image = models.ImageField(upload_to='tryout_club/')
 
     def __str__(self):
         return self.title
@@ -254,7 +254,7 @@ class Tryout_Club(models.Model):
 class Testimonial(models.Model):
     name = models.CharField(max_length=255)
     designation = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='testimonial/', blank=True, null=True)
+    image = models.ImageField(upload_to='testimonial/')
     content = models.TextField()
     rattings = models.CharField(max_length=5)
 
@@ -264,13 +264,28 @@ class Testimonial(models.Model):
 #Team Members    
 class Team_Members(models.Model):
     name = models.CharField(max_length=255)
-    designations = models.TextField()
+    designations = models.CharField(max_length=255)
     image = models.ImageField(upload_to='team_members/', blank=True, null=True)
     news_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        return self.name
+
+#App_Feature Members    
+class App_Feature(models.Model):
+    title = models.CharField(max_length=255)
+    sub_title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='app_feature/')
+    
+    def __str__(self):
         return self.title
 
+# Event Types Model
+class Slider_Content(models.Model):
+    content = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.content
 # class UserPost(models.Model):
     
 #     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

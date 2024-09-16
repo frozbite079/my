@@ -132,6 +132,24 @@ urlpatterns = [
     path('testimonial/edit/<int:testimonial_id>/', TestimonialEditView.as_view(), name='testimonial_edit'),  # Edit URL
     path('testimonial/delete/<int:pk>/', TestimonialDeleteView.as_view(), name='testimonial_delete'),
 
+    #Team_Members List URL
+    path('team_members/', Team_MembersListView.as_view(), name='team_members_list'),
+    path('team_members/create/', Team_MembersCreateView.as_view(), name='team_members_create'),
+    path('team_members/edit/<int:team_members_id>/', Team_MembersEditView.as_view(), name='team_members_edit'),  # Edit URL
+    path('team_members/delete/<int:pk>/', Team_MembersDeleteView.as_view(), name='team_members_delete'),
+
+    #App_Feature List URL
+    path('app_feature/', App_FeatureListView.as_view(), name='app_feature_list'),
+    path('app_feature/create/', App_FeatureCreateView.as_view(), name='app_feature_create'),
+    path('app_feature/edit/<int:app_feature_id>/', App_FeatureEditView.as_view(), name='app_feature_edit'),  # Edit URL
+    path('app_feature/delete/<int:pk>/', App_FeatureDeleteView.as_view(), name='app_feature_delete'),
+
+    # Slider_Content URL
+    path('slider_content/', Slider_ContentListView.as_view(), name='slider_content_list'),
+    path('slider_content/create/', Slider_ContentCreateView.as_view(), name='slider_content_create'),
+    path('slider_content/update/<int:pk>/', Slider_ContentUpdateView.as_view(), name='slider_content_update'),
+    path('slider_content/delete/<int:pk>/', Slider_ContentDeleteView.as_view(), name='slider_content_delete'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   
 
 

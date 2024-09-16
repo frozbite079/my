@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x7$wh)3+(3$)13tn$!pa=x#@1%l*qdmwk%zv!x(vlvsxkwey9-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -89,9 +89,9 @@ WSGI_APPLICATION = 'FutureStar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'futurestar',
+        'NAME': 'futurestar2',
         'USER': 'root',
-        'PASSWORD': '12345',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306'
     }

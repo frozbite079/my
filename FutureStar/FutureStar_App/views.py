@@ -1491,12 +1491,8 @@ class Team_MembersListView(LoginRequiredMixin, View):
 
 class Team_MembersCreateView(View):
     def post(self, request):
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-
-        if not title or not description:
-            messages.error(request, "Title and Description are required.")
-            return redirect('team_members_list')
+        name = request.POST.get('name')
+        designations = request.POST.get('designations')
 
         # Handling image upload
         image_file = request.FILES.get('image')
@@ -1507,8 +1503,8 @@ class Team_MembersCreateView(View):
             image_name = 'team_members/' + image_name
 
         team_members = Team_Members.objects.create(
-            title=title,
-            description=description,
+            name=name,
+            designations=designations,
             image=image_name  # Save the relative image path in the database
         )
 
@@ -1521,15 +1517,11 @@ class Team_MembersEditView(View):
     def post(self, request, team_members_id):
         team_members_item = get_object_or_404(Team_Members, id=team_members_id)
 
-        title = request.POST.get('title')
-        description = request.POST.get('description')
+        name = request.POST.get('name')
+        designations = request.POST.get('designations')
 
-        if not title or not description:
-            messages.error(request, "Title and Description are required.")
-            return redirect('team_members_list')
-
-        team_members_item.title = title
-        team_members_item.description = description
+        team_members_item.designations = designations
+        team_members_item.name = name
 
         image_file = request.FILES.get('image')
         if image_file:
@@ -1550,5 +1542,148 @@ class Team_MembersDeleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         team_members = get_object_or_404(Team_Members, pk=pk)
         team_members.delete()
-        messages.success(request, "Team_Member Deleted Successfully.")
+        messages.success(request, "Team Member Deleted Successfully.")
         return redirect("team_members_list")
+
+
+#################################### App_Feature Module ###############################################
+class App_FeatureListView(LoginRequiredMixin, View):
+    template_name = "Admin/App_Feature_List.html"
+
+    def get(self, request):
+        app_feature = App_Feature.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "app_feature": app_feature,
+                "breadcrumb": {"child": "App Feature List"},
+            },
+        )
+
+class App_FeatureCreateView(View):
+    def post(self, request):
+        title = request.POST.get('title')
+        sub_title = request.POST.get('sub_title')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'app_feature'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'app_feature/' + image_name
+
+        app_feature = App_Feature.objects.create(
+            title=title,
+            sub_title=sub_title,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "App Feature created successfully.")
+        return redirect('app_feature_list')
+
+class App_FeatureEditView(View):
+    template_name = "Admin/App_Feature_List.html"
+
+    def post(self, request, app_feature_id):
+        app_feature_item = get_object_or_404(App_Feature, id=app_feature_id)
+
+        title = request.POST.get('title')
+        sub_title = request.POST.get('sub_title')
+
+        app_feature_item.sub_title = sub_title
+        app_feature_item.title = title
+
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'app_feature'))
+            if app_feature_item.image and app_feature_item.image.path:
+                old_image_path = app_feature_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            app_feature_item.image = 'app_feature/' + image_name
+
+        app_feature_item.save()
+
+        messages.success(request, "App Feature updated successfully.")
+        return redirect('app_feature_list')
+
+class App_FeatureDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        app_feature = get_object_or_404(App_Feature, pk=pk)
+        app_feature.delete()
+        messages.success(request, "App Feature Deleted Successfully.")
+        return redirect("app_feature_list")
+    
+# Slider_Content CRUD Views
+class Slider_ContentCreateView(LoginRequiredMixin, View):
+    template_name = "forms/slider_content_form.html"
+
+    def get(self, request):
+        form = Slider_ContentForm()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        form = Slider_ContentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Slider Content Created successfully.")
+            return redirect("slider_content_list")
+        messages.error(
+            request,
+            "There was an error creating the Slider Content. Please ensure all fields are filled out correctly.",
+        )
+        return render(request, self.template_name, {"form": form})
+
+
+class Slider_ContentUpdateView(LoginRequiredMixin, View):
+    template_name = "forms/slider_content_form.html"
+
+    def get(self, request, pk):
+        slider_content = get_object_or_404(Slider_Content, pk=pk)
+        form = Slider_ContentForm(instance=slider_content)
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, pk):
+        slider_content = get_object_or_404(Slider_Content, pk=pk)
+        form = Slider_ContentForm(request.POST, instance=slider_content)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Slider Content Updated Successfully.")
+            return redirect("slider_content_list")
+        messages.error(
+            request,
+            "There was an error updating the  Slider Content. Please ensure all fields are filled out correctly.",
+        )
+        return render(request, self.template_name, {"form": form})
+
+
+class Slider_ContentDeleteView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        slider_content = get_object_or_404(Slider_Content, pk=pk)
+        slider_content.delete()
+        messages.success(request, "Slider Content Successfully Deleted.")
+        return redirect("slider_content_list")
+
+    def post(self, request, pk):
+        slider_content = get_object_or_404(Slider_Content, pk=pk)
+        slider_content.delete()
+        messages.success(request, "Slider Content Successfully Deleted.")
+        return redirect("slider_content_list")
+
+
+class Slider_ContentListView(LoginRequiredMixin, View):
+    template_name = "Admin/General_Settings/Slider_Content.html"
+
+    def get(self, request):
+        slider_contents = Slider_Content.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "slider_contents": slider_contents,
+                "breadcrumb": {"child": "Slider Content"},
+            },
+        )
