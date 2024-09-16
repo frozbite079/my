@@ -343,4 +343,24 @@ class Team_Members(models.Model):
 
 # News Module  Model
 
+#contact model
+
+class ContactPage(models.Model):
+    
+    Title = models.CharField(max_length=255,blank=True)
+    Title_content = models.CharField(max_length = 1000,blank =True)
+    Title_background = models.TextField(max_length=255,blank=True)
+    contact_us = models.CharField(max_length = 255,blank = True)
+    contact_us_title = models.CharField(max_length=255,blank=True)
+    contact_country = models.CharField(max_length=255,blank=True)
+    contact_mail_icon = models.TextField(max_length=255,blank = True)
+    contact_phone_icon = models.TextField(max_length=255,blank=True)
+    quote = models.CharField(max_length=255,blank=True)
+    quote_title = models.CharField(max_length=255,blank=True)
+    
+    def __str__(self):
+            return self.Title
+        
+
+
  
