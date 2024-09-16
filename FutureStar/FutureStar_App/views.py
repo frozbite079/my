@@ -349,13 +349,21 @@ class System_Settings(LoginRequiredMixin, View):
             system_settings.snapchat = request.POST.get("snapchat")
             system_settings.linkedin = request.POST.get("linkedin")
             system_settings.youtube = request.POST.get("youtube")
+            system_settings.happy_user = request.POST.get("happy_user")
+            system_settings.line_of_code = request.POST.get("line_of_code")
+            system_settings.downloads = request.POST.get("downloads")
+            system_settings.app_rate = request.POST.get("app_rate")
 
             fields = {
                     'website_name_english': "This field is required.",
                     'website_name_arabic': "This field is required.",
                     'phone': "This field is required.",
                     'email': "This field is required.",
-                    'address': "This field is required."
+                    'address': "This field is required.",
+                    'happy_user' : "This field is required.",
+                    'line_of_code' : "This field is required.",
+                    'downloads': "This field is required.",
+                    'app_rate': "This field is required.",
                 }
 
             for field, error_message in fields.items():

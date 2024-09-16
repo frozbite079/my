@@ -94,6 +94,10 @@ class SystemSettings(models.Model):
     snapchat = models.TextField(null=True, blank=True)
     linkedin = models.TextField(null=True, blank=True)
     youtube = models.TextField(null=True, blank=True)
+    happy_user = models.CharField(max_length=30,null=True, blank=True)
+    line_of_code = models.CharField(max_length=30,null=True, blank=True)
+    downloads = models.CharField(max_length=30,null=True, blank=True)
+    app_rate = models.CharField(max_length=30,null=True, blank=True)
 
     def __str__(self):
         return self.website_name_english
