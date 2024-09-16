@@ -35,10 +35,14 @@ urlpatterns = [
 
 
     #User List URL
-    path('User/', UserListView.as_view(), name='user_list'),
-    path('users/<int:user_id>/edit/', UserEditView.as_view(), name='user_edit'),
-    path('users/<int:user_id>/update/', UserEditView.as_view(), name='user_update'),
-    path('users/<int:pk>/delete/', UserDeleteView.as_view(), name='user_delete'),
+    path('players/', PlayerListView.as_view(), name='player_list'),
+    path('coach/', CoachListView.as_view(), name='coach_list'),
+    path('referee/', RefereeListView.as_view(), name='referee_list'),
+
+
+    # path('users/<int:user_id>/edit/', UserEditView.as_view(), name='user_edit'),
+    # path('users/<int:user_id>/update/', UserEditView.as_view(), name='user_update'),
+    # path('users/<int:pk>/delete/', UserDeleteView.as_view(), name='user_delete'),
     path('user/<int:pk>/toggle-status/', ToggleUserStatusView.as_view(), name='user_toggle_status'),
 
 

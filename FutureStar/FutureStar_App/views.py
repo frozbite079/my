@@ -403,6 +403,7 @@ class ToggleUserStatusView(View):
     def post(self, request, pk, *args, **kwargs):
         user = get_object_or_404(User, pk=pk)
         new_status = request.POST.get("status")
+        source_page = request.POST.get("source_page", "Dashboard")  # Default to Dashboard if not provided
 
         # Check if the user is a superuser
         if user.role_id == 1:
@@ -411,9 +412,7 @@ class ToggleUserStatusView(View):
 
         # Check if the current user is trying to deactivate their own account
         if user == request.user and new_status == "deactivate":
-            messages.info(
-                request, "Your account has been deactivated. Please log in again."
-            )
+            messages.info(request, "Your account has been deactivated. Please log in again.")
             user.is_active = False
             user.save()
             return redirect(reverse("login"))
@@ -428,18 +427,24 @@ class ToggleUserStatusView(View):
 
         user.save()
 
-        return redirect("user_list")
+        # Redirect to the appropriate list based on source_page
+        if source_page == "player_list":
+            return redirect(reverse("player_list"))
+        elif source_page == "coach_list":
+            return redirect(reverse("coach_list"))
+        elif source_page == "referee_list":
+            return redirect(reverse("referee_list"))
+        else:
+            return redirect(reverse("Dashboard"))
 
 
-# User Crud
-class UserListView(LoginRequiredMixin, View):
-    template_name = "Admin/User_List.html"
+class PlayerListView(LoginRequiredMixin, View):
+    template_name = "Admin/User/Player_List.html"
 
     def get(self, request):
         User = get_user_model()  # Get the custom user model
-        users = User.objects.exclude(role_id__isnull=True).exclude(role_id=1)
-        # Filter roles where id is not equal to 1
-        roles = Role.objects.exclude(id=1)
+        users = User.objects.filter(role_id=2)  # Fetch users where role_id is 2
+        roles = Role.objects.filter(id=2)  # Fetch roles with id 2
         return render(
             request,
             self.template_name,
@@ -450,66 +455,99 @@ class UserListView(LoginRequiredMixin, View):
             },
         )
 
-class UserEditForm(forms.ModelForm):
-    class Meta:
-        model = get_user_model()
-        fields = ['first_name', 'last_name', 'email', 'phone', 'role']
+class CoachListView(LoginRequiredMixin, View):
+    template_name = "Admin/User/Coach_List.html"
 
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if get_user_model().objects.filter(email=email).exclude(id=self.instance.id).exists():
-            raise forms.ValidationError('A user with this email already exists.')
-        return email
-
-
-class UserEditView(LoginRequiredMixin, View):
-    def get(self, request, user_id):
-        user = get_object_or_404(get_user_model(), id=user_id)
-        roles = Role.objects.all()
-        return JsonResponse(
+    def get(self, request):
+        User = get_user_model()  # Get the custom user model
+        users = User.objects.filter(role_id=3)  # Fetch users where role_id is 3
+        roles = Role.objects.filter(id=3)  # Fetch roles with id 3
+        return render(
+            request,
+            self.template_name,
             {
-                "id": user.id,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "email": user.email,
-                "phone": user.phone,
-                "role": user.role.id if user.role else None,
-            }
+                "users": users,
+                "roles": roles,
+                "breadcrumb": {"child": "Coach List"},
+            },
         )
 
-    @method_decorator(csrf_exempt)
-    def post(self, request, user_id):
-        user = get_object_or_404(get_user_model(), id=user_id)
-        form = UserEditForm(request.POST, instance=user)
+class RefereeListView(LoginRequiredMixin, View):
+    template_name = "Admin/User/Referee_List.html"
 
-        if form.is_valid():
-            form.save()
-            # Use Django messages to pass success message
-            messages.success(request, f"User {user.username} Updated Successfully.")
-            return JsonResponse({"success": True})
-        else:
-            # Return form errors if the form is invalid
-            return JsonResponse({"success": False, "errors": form.errors})
+    def get(self, request):
+        User = get_user_model()  # Get the custom user model
+        users = User.objects.filter(role_id=4)  # Fetch users where role_id is 2
+        roles = Role.objects.filter(id=4)  # Fetch roles with id 2
+        return render(
+            request,
+            self.template_name,
+            {
+                "users": users,
+                "roles": roles,
+                "breadcrumb": {"child": "Referee List"},
+            },
+        )
+# class UserEditForm(forms.ModelForm):
+#     class Meta:
+#         model = get_user_model()
+#         fields = ['first_name', 'last_name', 'email', 'phone', 'role']
 
-class UserDeleteView(LoginRequiredMixin, View):
-    def get(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        user.delete()
-        messages.success(request, f"User {user.username} Deleted Successfully.")
-        return redirect("user_list")  # Redirect to the user list after successful deletion
+#     def clean_email(self):
+#         email = self.cleaned_data['email']
+#         if get_user_model().objects.filter(email=email).exclude(id=self.instance.id).exists():
+#             raise forms.ValidationError('A user with this email already exists.')
+#         return email
 
-    def post(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        print(user)
-        print(user.role_id)
-        if user.role_id == 1 or user.role is None:
-            messages.error(request,"SuperUser Can not deleted.")
-            print(messages.success(request,"SuperUser Can not deleted."))
-            return redirect("user_list")
-        else:
-            user.delete()
-            messages.success(request, f"User {user.username} Deleted Successfully.")
-            return redirect("user_list")  # Redirect to the user list after successful deletion
+
+# class UserEditView(LoginRequiredMixin, View):
+#     def get(self, request, user_id):
+#         user = get_object_or_404(get_user_model(), id=user_id)
+#         roles = Role.objects.all()
+#         return JsonResponse(
+#             {
+#                 "id": user.id,
+#                 "first_name": user.first_name,
+#                 "last_name": user.last_name,
+#                 "email": user.email,
+#                 "phone": user.phone,
+#                 "role": user.role.id if user.role else None,
+#             }
+#         )
+
+#     @method_decorator(csrf_exempt)
+#     def post(self, request, user_id):
+#         user = get_object_or_404(get_user_model(), id=user_id)
+#         form = UserEditForm(request.POST, instance=user)
+
+#         if form.is_valid():
+#             form.save()
+#             # Use Django messages to pass success message
+#             messages.success(request, f"User {user.username} Updated Successfully.")
+#             return JsonResponse({"success": True})
+#         else:
+#             # Return form errors if the form is invalid
+#             return JsonResponse({"success": False, "errors": form.errors})
+
+# class UserDeleteView(LoginRequiredMixin, View):
+#     def get(self, request, pk):
+#         user = get_object_or_404(User, pk=pk)
+#         user.delete()
+#         messages.success(request, f"User {user.username} Deleted Successfully.")
+#         return redirect("user_list")  # Redirect to the user list after successful deletion
+
+#     def post(self, request, pk):
+#         user = get_object_or_404(User, pk=pk)
+#         print(user)
+#         print(user.role_id)
+#         if user.role_id == 1 or user.role is None:
+#             messages.error(request,"SuperUser Can not deleted.")
+#             print(messages.success(request,"SuperUser Can not deleted."))
+#             return redirect("user_list")
+#         else:
+#             user.delete()
+#             messages.success(request, f"User {user.username} Deleted Successfully.")
+#             return redirect("user_list")  # Redirect to the user list after successful deletion
 
 
 # Category CRUD Views

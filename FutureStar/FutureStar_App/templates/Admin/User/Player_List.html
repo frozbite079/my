@@ -36,7 +36,22 @@
                               <td>{{ user.last_name }}</td>
                               <td>{{ user.email }}</td>
                               <td>{{ user.phone }}</td>
-                              <td> {% if user.is_active %} <button class="btn btn-success toggle-status" data-user-id="{{ user.id }}" data-status="deactivate">Active</button> {% else %} <button class="btn btn-danger toggle-status" data-user-id="{{ user.id }}" data-status="activate">Deactive</button> {% endif %} </td> {% if user.role %} <td>{{ user.role.name }}</td> {% else %} <td>No Role Assigned</td> {% endif %} <td>
+                              <td>
+                                 <form method="post" action="{% url 'user_toggle_status' pk=user.id %}" class="status-form">
+                                     {% csrf_token %}
+                                     <input type="hidden" name="source_page" value="player_list">
+                                     <input type="hidden" name="status" id="status-{{ user.id }}" value="{% if user.is_active %}deactivate{% else %}activate{% endif %}">
+                                     <button type="submit" class="btn {% if user.is_active %}btn-success{% else %}btn-danger{% endif %}">
+                                         {% if user.is_active %}Active{% else %}Deactive{% endif %}
+                                     </button>
+                                 </form>
+                             </td>
+                              {% if user.role %} 
+                              <td>{{ user.role.name }}</td> 
+                              {% else %} 
+                              <td>No Role Assigned</td> 
+                              {% endif %} 
+                              <td>
                                  <div class="action-menu-container" style="position: relative; display: inline-block;">
                                     <a href="#" class="three-dots-menu" onclick="toggleMenu(this)">
                                        <i data-feather="more-vertical"></i>
