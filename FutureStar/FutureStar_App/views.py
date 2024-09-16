@@ -353,6 +353,10 @@ class System_Settings(LoginRequiredMixin, View):
             system_settings.line_of_code = request.POST.get("line_of_code")
             system_settings.downloads = request.POST.get("downloads")
             system_settings.app_rate = request.POST.get("app_rate")
+            system_settings.years_of_experience = request.POST.get("years_of_experience")
+            system_settings.project_completed = request.POST.get("project_completed")
+            system_settings.proffesioan_team_members = request.POST.get("proffesioan_team_members")
+            system_settings.awards_winning = request.POST.get("awards_winning")
 
             fields = {
                     'website_name_english': "This field is required.",
@@ -1468,4 +1472,83 @@ class TestimonialDeleteView(LoginRequiredMixin, View):
         testimonial.delete()
         messages.success(request, "Tryout Club Deleted Successfully.")
         return redirect("testimonial_list")
-    
+
+
+#################################### Team_Members Module ###############################################
+class Team_MembersListView(LoginRequiredMixin, View):
+    template_name = "Admin/Team_Members_List.html"
+
+    def get(self, request):
+        team_members = Team_Members.objects.all()
+        return render(
+            request,
+            self.template_name,
+            {
+                "team_members": team_members,
+                "breadcrumb": {"child": "Team Members List"},
+            },
+        )
+
+class Team_MembersCreateView(View):
+    def post(self, request):
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+
+        if not title or not description:
+            messages.error(request, "Title and Description are required.")
+            return redirect('team_members_list')
+
+        # Handling image upload
+        image_file = request.FILES.get('image')
+        image_name = None
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'team_members'))
+            image_name = fs.save(image_file.name, image_file)
+            image_name = 'team_members/' + image_name
+
+        team_members = Team_Members.objects.create(
+            title=title,
+            description=description,
+            image=image_name  # Save the relative image path in the database
+        )
+
+        messages.success(request, "Team Member created successfully.")
+        return redirect('team_members_list')
+
+class Team_MembersEditView(View):
+    template_name = "Admin/Team_Members_List.html"
+
+    def post(self, request, team_members_id):
+        team_members_item = get_object_or_404(Team_Members, id=team_members_id)
+
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+
+        if not title or not description:
+            messages.error(request, "Title and Description are required.")
+            return redirect('team_members_list')
+
+        team_members_item.title = title
+        team_members_item.description = description
+
+        image_file = request.FILES.get('image')
+        if image_file:
+            fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'team_members'))
+            if team_members_item.image and team_members_item.image.path:
+                old_image_path = team_members_item.image.path
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+            image_name = fs.save(image_file.name, image_file)
+            team_members_item.image = 'team_members/' + image_name
+
+        team_members_item.save()
+
+        messages.success(request, "Team Member updated successfully.")
+        return redirect('team_members_list')
+
+class Team_MembersDeleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        team_members = get_object_or_404(Team_Members, pk=pk)
+        team_members.delete()
+        messages.success(request, "Team_Member Deleted Successfully.")
+        return redirect("team_members_list")

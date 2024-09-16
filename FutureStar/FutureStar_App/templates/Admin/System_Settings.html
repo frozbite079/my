@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div class="row" style="margin-bottom: 10px;">
-                        <h4>Achievements of App</h4>
+                        <h4>Achievements of App (Home Page)</h4>
                     </div>
                     <div style="border-top: 1px solid #ccc; margin-top: 5px; margin-bottom: 20px;"></div>                    
                     <!-- Achivemets of app -->
@@ -119,6 +119,49 @@
                                 <input class="form-control btn-pill {% if errors.app_rate %}is-invalid{% endif %}" id="app_rate" name="app_rate" type="text" value="{{ system_settings.app_rate }}" placeholder="App Rate">
                                 {% if errors.app_rate %}
                                     <div class="invalid-feedback">{{ errors.app_rate }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 10px;">
+                        <h4>Achievements of App (About Us Page)</h4>
+                    </div>
+                    <div style="border-top: 1px solid #ccc; margin-top: 5px; margin-bottom: 20px;"></div>                    
+                    <!-- Achivemets of app -->
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="mb-3">
+                                <label class="form-label" for="years_of_experience">Years of Experience</label>
+                                <input class="form-control btn-pill {% if errors.years_of_experience %}is-invalid{% endif %}" id="years_of_experience" name="years_of_experience" type="text" value="{{ system_settings.years_of_experience }}" placeholder="Years of Experience">
+                                {% if errors.years_of_experience %}
+                                    <div class="invalid-feedback">{{ errors.years_of_experience }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="mb-3">
+                                <label class="form-label" for="proffesioan_team_members">Number of Proffesioan Team Members</label>
+                                <input class="form-control btn-pill {% if errors.proffesioan_team_members %}is-invalid{% endif %}" id="proffesioan_team_members" name="proffesioan_team_members" type="text" value="{{ system_settings.proffesioan_team_members }}" placeholder="Number of Proffesioan Team Members">
+                                {% if errors.proffesioan_team_members %}
+                                    <div class="invalid-feedback">{{ errors.proffesioan_team_members }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="mb-3">
+                                <label class="form-label" for="project_completed">Number of Project Completed</label>
+                                <input class="form-control btn-pill {% if errors.downloads %}is-invalid{% endif %}" id="project_completed" name="project_completed" type="text" value="{{ system_settings.project_completed }}" placeholder="Number of project completed">
+                                {% if errors.project_completed %}
+                                    <div class="invalid-feedback">{{ errors.project_completed }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="mb-3">
+                                <label class="form-label" for="awards_winning">Number of Awards Winning</label>
+                                <input class="form-control btn-pill {% if errors.awards_winning %}is-invalid{% endif %}" id="awards_winning" name="awards_winning" type="text" value="{{ system_settings.awards_winning }}" placeholder="Number of Awards Winning">
+                                {% if errors.awards_winning %}
+                                    <div class="invalid-feedback">{{ errors.awards_winning }}</div>
                                 {% endif %}
                             </div>
                         </div>

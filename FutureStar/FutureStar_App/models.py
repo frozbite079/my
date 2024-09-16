@@ -98,6 +98,10 @@ class SystemSettings(models.Model):
     line_of_code = models.CharField(max_length=30,null=True, blank=True)
     downloads = models.CharField(max_length=30,null=True, blank=True)
     app_rate = models.CharField(max_length=30,null=True, blank=True)
+    years_of_experience = models.CharField(max_length=30,null=True, blank=True)
+    project_completed = models.CharField(max_length=30,null=True, blank=True)
+    proffesioan_team_members = models.CharField(max_length=30,null=True, blank=True)
+    awards_winning = models.CharField(max_length=30,null=True, blank=True)
 
     def __str__(self):
         return self.website_name_english
@@ -255,7 +259,17 @@ class Testimonial(models.Model):
     rattings = models.CharField(max_length=5)
 
     def __str__(self):
-        return self.name        
+        return self.name
+    
+#Team Members    
+class Team_Members(models.Model):
+    name = models.CharField(max_length=255)
+    designations = models.TextField()
+    image = models.ImageField(upload_to='team_members/', blank=True, null=True)
+    news_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
 # class UserPost(models.Model):
     
